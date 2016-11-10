@@ -32,7 +32,7 @@ gem 'jbuilder', '~> 2.5'
 gem 'jquery-rails'
 
 # Use twitter bootstrap sass
-gem 'bootstrap-sass', '~> 3.2.0'
+gem 'bootstrap-sass', '~> 3.3.7'
 gem 'autoprefixer-rails'
 gem 'font-awesome-rails'
 
@@ -51,7 +51,7 @@ group :development do
   gem 'binding_of_caller'
   gem 'letter_opener'
   gem 'guard'
-  gem 'guard-rspec', '~> 4.2.8'
+  gem 'guard-rspec', '~> 4.7.3'
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem 'web-console'
   gem 'listen', '~> 3.0.5'

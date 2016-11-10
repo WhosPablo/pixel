@@ -4,9 +4,5 @@
     <data-source name="Rails pixel: development" uuid="fe402388-4c9d-4b1f-9375-3cce55be7cab">
       <auth-required>false</auth-required>
     </data-source>
-    <data-source name="Rails pixel: production" uuid="9ea7d1a5-3bb0-4b79-b6a2-0d179207ef59">
-      <user-name>pixel</user-name>
-      <user-password>df96df8fdf97df8adfefdfe4dffcdff1df8ddffadfe3dff2dfefdfe6dff5dfeedfebdffedfebdfe8dfebdff9dfefdff5dffadfebdff9dff9dffddfe5dff8dfeedf8ddff7df8adf8fdf94</user-password>
-    </data-source>
   </component>
 </project>

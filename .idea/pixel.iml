@@ -138,7 +138,7 @@
     <orderEntry type="library" scope="PROVIDED" name="bcrypt (v3.1.11, RVM: ruby-2.3.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="better_errors (v2.1.1, RVM: ruby-2.3.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="binding_of_caller (v0.7.2, RVM: ruby-2.3.1) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="bootstrap-sass (v3.2.0.2, RVM: ruby-2.3.1) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="bootstrap-sass (v3.3.7, RVM: ruby-2.3.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="builder (v3.2.2, RVM: ruby-2.3.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bundler (v1.13.6, RVM: ruby-2.3.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="byebug (v9.0.6, RVM: ruby-2.3.1) [gem]" level="application" />
@@ -191,7 +191,8 @@
     <orderEntry type="library" scope="PROVIDED" name="google-api-client (v0.9.20, RVM: ruby-2.3.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="googleauth (v0.5.1, RVM: ruby-2.3.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="guard (v2.14.0, RVM: ruby-2.3.1) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="guard-rspec (v4.2.10, RVM: ruby-2.3.1) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="guard-compat (v1.2.1, RVM: ruby-2.3.1) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="guard-rspec (v4.7.3, RVM: ruby-2.3.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="hashie (v3.4.6, RVM: ruby-2.3.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="httpclient (v2.8.2.4, RVM: ruby-2.3.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="hurley (v0.2, RVM: ruby-2.3.1) [gem]" level="application" />
