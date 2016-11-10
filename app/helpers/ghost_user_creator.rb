@@ -7,11 +7,8 @@ class GhostUserCreator
 
   def self.process_users(potential_users)
     potential_users.each do | user_info |
-      primary_email = user_info.emails.select do |elem|
-        elem > 5
-      end
-
-      user = User.find_or_create_by(email: user.email)
+      user = User.find_or_create_by(email: user_info.primary_email)
+      user.update(email: user_info.primary_email)
     end
   end
 
