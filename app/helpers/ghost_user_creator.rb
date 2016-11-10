@@ -6,9 +6,13 @@ class GhostUserCreator
   ADMIN_API = Google::Apis::AdminDirectoryV1 # Alias the module
 
   def self.process_users(potential_users)
+    ## TODO spin a thread to do this
     potential_users.each do | user_info |
-      user = User.find_or_create_by(email: user_info.primary_email)
-      user.update(email: user_info.primary_email)
+      user = User.find_or_create_by(email: user_info.primary_email) do |user|
+        user.email = user_info.primary_email
+        user.password = Devise.friendly_token[0,20]
+      end
+      user.save!
     end
   end
 
