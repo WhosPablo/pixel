@@ -5,6 +5,11 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable, :omniauth_providers => [:google_oauth2]
 
+  has_many :questions_asked, class_name: 'Question', foreign_key: :user_id
+
+  has_many :question_recipients
+  has_many :questions_received, through: :question_recipients, source: :question
+
   def self.from_omniauth(access_token)
     puts access_token
     data = access_token.info
