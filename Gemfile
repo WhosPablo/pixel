@@ -1,5 +1,12 @@
 source 'https://rubygems.org'
 
+# Use Redis adapter to run Action Cable in production
+# gem 'redis', '~> 3.0'
+# Use ActiveModel has_secure_password
+# gem 'bcrypt', '~> 3.1.7'
+# Use Capistrano for deployment
+# gem 'capistrano-rails', group: :development
+
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
@@ -35,22 +42,9 @@ gem 'google-api-client'
 # Outdated google api rails wrapper :(
 # gem 'google-api-rails'
 
-# Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 3.0'
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
-
 # Devise for user authentication
 gem 'devise'
 gem 'omniauth-google-oauth2'
-
-
-group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platform: :mri
-end
 
 group :development do
   gem 'better_errors'
@@ -58,9 +52,6 @@ group :development do
   gem 'letter_opener'
   gem 'guard'
   gem 'guard-rspec', '~> 4.2.8'
-end
-
-group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem 'web-console'
   gem 'listen', '~> 3.0.5'
@@ -70,9 +61,10 @@ group :development do
 end
 
 group :development, :test do
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'byebug', platform: :mri
   gem 'sqlite3'
 end
-
 
 group :production do
   # Use postgresql as the database for Active Record
