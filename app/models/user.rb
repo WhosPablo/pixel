@@ -1,4 +1,4 @@
-class User < ApplicationRecord
+class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -12,14 +12,15 @@ class User < ApplicationRecord
   has_many :question_recipients
   has_many :questions_received, through: :question_recipients, source: :question
 
+  acts_as_follower
+  acts_as_followable
+
   def self.from_omniauth(access_token)
     puts access_token
     data = access_token.info
     user = User.where(:email => data["email"]).first
 
-    GhostUserCreator.start_with_google_token(access_token, data)
     # Uncomment the section below if you want users to be created if they don't exist
-    puts data
     unless user
         user = User.create(
             first_name: data["first_name"],
@@ -28,6 +29,8 @@ class User < ApplicationRecord
             password: Devise.friendly_token[0,20]
         )
     end
+
+    GhostUserCreator.start_with_google_token(access_token, user)
     user
   end
 

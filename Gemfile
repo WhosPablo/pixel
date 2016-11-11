@@ -39,8 +39,8 @@ gem 'font-awesome-rails'
 
 gem 'google-api-client'
 
-# Outdated google api rails wrapper :(
-# gem 'google-api-rails'
+# Be able to follow people
+gem 'acts_as_follower', '~> 0.2.0'
 
 # Devise for user authentication
 gem 'devise'
