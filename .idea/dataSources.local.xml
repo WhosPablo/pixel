@@ -8,10 +8,5 @@
       <auth-required>false</auth-required>
       <first-sync>true</first-sync>
     </data-source>
-    <data-source name="Rails pixel: production" uuid="047f91b6-2e5d-43e2-96b4-12b79f18a2ab">
-      <first-sync>true</first-sync>
-      <user-name>pixel</user-name>
-      <user-password>df96df8fdf97df8adfefdfe4dffcdff1df8ddffadfe3dff2dfefdfe6dff5dfeedfebdffedfebdfe8dfebdff9dfefdff5dffadfebdff9dff9dffddfe5dff8dfeedf8ddff7df8adf8fdf94</user-password>
-    </data-source>
   </component>
 </project>
