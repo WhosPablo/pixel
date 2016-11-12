@@ -3,4 +3,6 @@ class Question < ApplicationRecord
 
   has_many :question_recipients
   has_many :recipients, through: :question_recipients, source: :user
+
+  acts_as_commentable
 end
