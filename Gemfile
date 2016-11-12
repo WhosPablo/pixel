@@ -46,6 +46,11 @@ gem 'acts_as_follower', '~> 0.2.0'
 gem 'devise'
 gem 'omniauth-google-oauth2'
 
+
+# Votable and commentable questions
+gem 'acts_as_votable', '~> 0.10.0'
+gem 'acts_as_commentable'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
