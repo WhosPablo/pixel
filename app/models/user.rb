@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable, :omniauth_providers => [:google_oauth2]
   before_save :downcase_fields
-  before_create :set_username
+  before_create :set_username_on_create
 
   has_many :questions_asked, class_name: 'Question', foreign_key: :user_id
 
@@ -34,7 +34,22 @@ class User < ActiveRecord::Base
     user
   end
 
+
+  def turn_ghost_user_to_real_user(params)
+    if self.is_ghost_user
+      self.update(ghost_user_to_user_params(params))
+      self.is_ghost_user = false
+      self.save!
+      self
+    end
+  end
+
   private
+
+  def ghost_user_to_user_params(params)
+    params.require(:user).permit(:first_name, :last_name, :is_ghost_user, :password, :password_confirmation)
+  end
+
   def downcase_fields
     if self.first_name
       self.first_name.downcase!
@@ -45,10 +60,10 @@ class User < ActiveRecord::Base
     self.email.downcase!
   end
 
-  def set_username
+  def set_username_on_create
     if self.first_name and self.last_name
       same_name_users = User.where(first_name: self.first_name.downcase, last_name: self.last_name.downcase)
-      if same_name_users
+      if same_name_users and same_name_users.count > 0
         self.username = "#{self.first_name.downcase}.#{self.last_name.downcase}.#{same_name_users.count.to_s.rjust(2, '0')}"
       else
         self.username = "#{self.first_name.downcase}.#{self.last_name.downcase}"

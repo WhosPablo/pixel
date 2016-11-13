@@ -12,7 +12,7 @@ class GhostUserCreator
   def self.start_with_google_token(access_token, current_user)
     #TODO both of these only take in the first page of users (does not account for others)
     unless get_company_domain(current_user).casecmp("gmail.com") == 0
-      process_directory_contacts(access_token, get_company_domain(user), current_user)
+      process_directory_contacts(access_token, get_company_domain(current_user), current_user)
     end
     process_personal_contacts(access_token, current_user)
   end
@@ -36,36 +36,45 @@ class GhostUserCreator
     end
   end
 
-  def self.import_users_from_directory(potential_users, current_user)
-    potential_users.each do | user_info |
-      user = User.find_or_create_by(email: user_info.primary_email.downcase) do |user|
-        if user_info.name
-          user.first_name = user_info.name.given_name
-          user.last_name = user_info.name.family_name
-        end
-        user.email = user_info.primary_email
-        user.password = Devise.friendly_token[0,20]
-        user.save!
+  def self.import_users_from_directory(external_user_contacts, current_user)
+    external_user_contacts.each do | external_user_info |
+      user_contact = User.find_or_create_by(email: external_user_info.primary_email.downcase) do |user|
+        create_ghost_user_from_directory(external_user_info, user)
       end
-      current_user.follow(user)
+      current_user.follow(user_contact)
     end
   end
 
-  def self.import_users_from_contacts(potential_users, current_user)
-    potential_users.each do | user_info |
-      if user_info.email_addresses
-        primary_email_obj = user_info.email_addresses.select { | email | email.metadata.primary } .first
-        user = User.find_or_create_by(email: primary_email_obj.value.downcase) do |user|
-          if user_info.names
-            user.first_name = user_info.names.first.given_name
-            user.last_name = user_info.names.first.family_name
-          end
-          user.password = Devise.friendly_token[0,20]
-          user.save!
+  def self.import_users_from_contacts(external_user_contacts, current_user)
+    external_user_contacts.each do | external_user_info |
+      if external_user_info.email_addresses
+        primary_email_obj = external_user_info.email_addresses.select { | email | email.metadata.primary } .first
+        user_contact = User.find_or_create_by(email: primary_email_obj.value.downcase) do |new_user_obj|
+          create_ghost_user_from_contacts(external_user_info, new_user_obj)
         end
-        current_user.follow(user)
+        current_user.follow(user_contact)
       end
     end
+  end
+
+  def self.create_ghost_user_from_directory(new_user_info, new_user_object)
+    if new_user_info.name
+      new_user_object.first_name = new_user_info.name.given_name
+      new_user_object.last_name = new_user_info.name.family_name
+    end
+    new_user_object.is_ghost_user = true
+    new_user_object.password = Devise.friendly_token[0,20]
+    new_user_object.save!
+  end
+
+  def self.create_ghost_user_from_contacts(new_user_info, new_user_object)
+    if new_user_info.names
+      new_user_object.first_name = new_user_info.names.first.given_name
+      new_user_object.last_name = new_user_info.names.first.family_name
+    end
+    new_user_object.is_ghost_user = true
+    new_user_object.password = Devise.friendly_token[0,20]
+    new_user_object.save!
   end
 
   def self.get_company_domain(current_user)
