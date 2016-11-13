@@ -5,4 +5,8 @@ class Question < ApplicationRecord
   has_many :recipients, through: :question_recipients, source: :user
 
   acts_as_commentable
+
+  def belongs_to(user_to_check)
+    user_id == user_to_check.id
+  end
 end

@@ -1,6 +1,7 @@
 class QuestionsController < ApplicationController
-  before_action :set_question, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
+  before_action :set_question, only: [:show, :edit, :update, :destroy]
+  before_action :require_permission, only: [ :edit, :update, :destroy]
 
   # GET /questions
   # GET /questions.json
@@ -73,5 +74,12 @@ class QuestionsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def question_params
       params.require(:question).permit(:title, :body)
+    end
+
+    def require_permission
+      unless @question.belongs_to current_user
+        redirect_to question_path, :alert => 'Unauthorized'
+      end
+
     end
 end
