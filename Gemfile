@@ -31,6 +31,9 @@ gem 'jbuilder', '~> 2.5'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
+# Used to implement at.js for auto complete mentions
+gem 'jquery-atwho-rails'
+
 # Use twitter bootstrap sass
 gem 'bootstrap-sass', '~> 3.3.7'
 gem 'autoprefixer-rails'

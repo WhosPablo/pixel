@@ -1,3 +1,5 @@
+
+<div id="mentionable-data" data-content="<%= mentionable_user_path(current_user)%>"></div>
 <%= form_for(question) do |f| %>
   <% if question.errors.any? %>
     <div id="error_explanation">
@@ -16,6 +18,11 @@
     <%= f.text_field :title %>
   </div>
 
+  <div class="field" class="input-mentionable">
+    <%= f.label :recipients %>
+    <%= f.text_field :recipients, class: 'question-recipients input-mentionable' %>
+  </div>
+
   <div class="field">
     <%= f.label :body %>
     <%= f.text_field :body %>
@@ -24,4 +31,9 @@
   <div class="actions">
     <%= f.submit %>
   </div>
+
+
+  <%= javascript_tag do %>
+
+  <% end %>
 <% end %>

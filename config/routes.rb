@@ -2,9 +2,16 @@ Rails.application.routes.draw do
   resources :questions
 
   authenticated :user do
+    get :mentionable => 'users/mentions#mentionable'
     root :to => 'questions#index', as: :authenticated_root
   end
   root :to => 'home#index'
+
+  resources :users , only: [:mentionable] do
+    member do
+      get :mentionable
+    end
+  end
 
   devise_for :users, controllers: {
       registrations: "users/registrations",
