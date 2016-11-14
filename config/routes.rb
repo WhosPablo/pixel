@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   resources :questions
 
+  resources :comments, only: [:create, :destroy]
+
   authenticated :user do
     get :mentionable => 'users/mentions#mentionable'
     root :to => 'questions#index', as: :authenticated_root

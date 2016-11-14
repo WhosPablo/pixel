@@ -7,8 +7,8 @@ class User < ActiveRecord::Base
   before_save :downcase_fields
   before_create :set_username_on_create
 
+  has_many :comments
   has_many :questions_asked, class_name: 'Question', foreign_key: :user_id
-
   has_many :question_recipients
   has_many :questions_received, through: :question_recipients, source: :question
 
