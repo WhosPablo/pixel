@@ -54,6 +54,10 @@ gem 'omniauth-google-oauth2'
 gem 'acts_as_votable', '~> 0.10.0'
 gem 'acts_as_commentable'
 
+# Easy forms
+gem 'simple_form'
+
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'

@@ -1,6 +1,6 @@
 
 <div id="mentionable-data" data-content="<%= mentionable_user_path(current_user)%>"></div>
-<%= form_for(question) do |f| %>
+<%= simple_form_for @question do |f| %>
   <% if question.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(question.errors.count, "error") %> prohibited this question from being saved:</h2>
@@ -13,27 +13,10 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :title %>
-    <%= f.text_field :title %>
-  </div>
+  <%= f.input :title %>
+  <%= f.input :recipients_list, input_html: { class: 'input-mentionable', value: nil }%>
+  <%= f.input :body, as: :text %>
+  <%= f.button :submit %>
 
-  <div class="field" class="input-mentionable">
-    <%= f.label :recipients %>
-    <%= f.text_field :recipients, class: 'question-recipients input-mentionable' %>
-  </div>
-
-  <div class="field">
-    <%= f.label :body %>
-    <%= f.text_field :body %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-
-
-  <%= javascript_tag do %>
-
-  <% end %>
 <% end %>
+
