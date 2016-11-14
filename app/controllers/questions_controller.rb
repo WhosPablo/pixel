@@ -33,6 +33,7 @@ class QuestionsController < ApplicationController
 
     respond_to do |format|
       if @question.save
+        send_initial_email_to_all_recipients
         format.html { redirect_to @question, notice: 'Question was successfully created.' }
         format.json { render :show, status: :created, location: @question }
       else
@@ -47,6 +48,7 @@ class QuestionsController < ApplicationController
   def update
     respond_to do |format|
       if @question.update(question_params)
+        send_initial_email_to_recipients_csv(question_params[:recipients_list])
         format.html { redirect_to @question, notice: 'Question was successfully updated.' }
         format.json { render :show, status: :ok, location: @question }
       else
@@ -81,6 +83,17 @@ class QuestionsController < ApplicationController
       unless @question.belongs_to current_user
         redirect_to question_path, :alert => 'Unauthorized'
       end
+    end
 
+  def send_initial_email_to_recipients_csv(recipients_csv)
+    recipients_users = @question.convert_recipients_csv_to_user_objs(recipients_csv)
+    recipients_users.each do | recipient |
+      UserMailer.question_recipient_email(recipient, @question).deliver_now
+    end
+  end
+    def send_initial_email_to_all_recipients
+      @question.recipients.each do | recipient |
+        UserMailer.question_recipient_email(recipient, @question).deliver_now
+      end
     end
 end

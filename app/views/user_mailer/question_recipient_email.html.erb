@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1><%= @from_name.titleize %> has asked you a question</h1>
+    <p>
+      <%= truncate(@question.body, length: @question.body.length/2) %>
+    </p>
+    <p>
+      Click here to answer:  <%= link_to 'Show', @question %>
+    </p>
+  </body>
+</html>

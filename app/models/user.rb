@@ -45,6 +45,12 @@ class User < ActiveRecord::Base
     user
   end
 
+  def full_name
+    if self.first_name and self.last_name
+      [self.first_name, self.last_name].join(' ')
+    end
+  end
+
 
   def turn_ghost_user_to_real_user(params)
     if self.is_ghost_user

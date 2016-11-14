@@ -1,0 +1,8 @@
+Hey! <%= @from_name.titleize %> has asked you a question
+===============================================
+
+truncate(@question.body, length: @question.body.length/2)
+
+Click here to answer:  <%= link_to 'Show', @question %>
+
+Thanks!

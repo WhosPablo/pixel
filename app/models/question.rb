@@ -14,13 +14,19 @@ class Question < ApplicationRecord
     self.recipients.map { |t| t.username }.join(", ")
   end
 
-  def recipients_list=(new_value)
-    recipients = new_value.split(/,\s+/)
-    puts recipients
-    user_recipients = recipients.map do | recipient_username_or_email |
+  def recipients_list=(recipient_csv)
+    user_recipients = convert_recipients_csv_to_user_objs(recipient_csv)
+    self.recipients << user_recipients
+  end
 
-      recipient_by_username = User.where(username: recipient_username_or_email.downcase)
-      recipient_by_email = User.where(email: recipient_username_or_email.downcase)
+  #TODO maybe move this from here
+  def convert_recipients_csv_to_user_objs(recipients)
+    recipients = recipients.split(/,\s+/)
+
+    recipients.map do | recipient_username_or_email |
+
+      recipient_by_username = User.find_by_username(recipient_username_or_email.downcase)
+      recipient_by_email = User.find_by_email(recipient_username_or_email.downcase)
 
       #TODO fix race condition here between checking if user exists and creating one
       if recipient_by_username.blank? and recipient_by_email.blank?
@@ -32,7 +38,6 @@ class Question < ApplicationRecord
         recipient_by_email
       end
     end
-    self.recipients << user_recipients
   end
 
 end
