@@ -17,7 +17,6 @@ class User < ActiveRecord::Base
 
   #TODO allow for more fields to be passed and have create ghost users call this?
   def self.create_ghost_user(user_info)
-    puts "here"
     if user_info[:email]
       User.find_or_create_by(email: user_info[:email].downcase) do |new_user_obj|
         new_user_obj.is_ghost_user = true
@@ -40,8 +39,7 @@ class User < ActiveRecord::Base
             password: Devise.friendly_token[0,20]
         )
     end
-
-    GhostUserCreator.start_with_google_token(access_token, user)
+    ImportDirectoryContactsJob.perform_later access_token, user
     user
   end
 
