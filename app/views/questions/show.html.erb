@@ -1,42 +1,15 @@
 <p id="notice"><%= notice %></p>
 <div id="question-<%= @question.id %>" class="question">
-
-  <p>
-    <strong>Title:</strong>
-    <%= @question.title %>
-  </p>
-
-  <p>
-    <strong>Recipients:</strong>
-    <%= @question.recipients_list %>
-  </p>
-
-  <p>
-    <strong>Body:</strong>
-    <%= @question.body %>
-  </p>
-
-  <p>
-    <strong>User:</strong>
-    <%= @question.user.email %>
-  </p>
-  <% if @question.belongs_to(current_user) %>
-      <td><%= link_to 'Edit', edit_question_path(@question) %></td>
-      <td><%= link_to 'Destroy', @question, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  <% end %>
-
-
-  <div class="row">
-    <div class="col-lg-6 col-lg-offset-3 well">
-      <h4>Comments</h4>
-      <hr>
-      <%= render 'comments/form', commentable: @question %>
-      <br>
-      <div class="comments">
-        <%= render(@comments) || render('shared/no_resource', resources: 'Comments') %>
+    <div class="row">
+        <%= render @question, remote: false %>
+    </div>
+    <div class="row">
+      <div class="col-lg-9 col-lg-offset-2">
+        <%= render 'comments/form', commentable: @question %>
+        <div class="comments">
+          <%= render(@comments) || render('shared/no_resource', resources: 'Comments') %>
+        </div>
       </div>
     </div>
-  </div>
-
 
 </div>

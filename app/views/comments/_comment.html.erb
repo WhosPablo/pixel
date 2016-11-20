@@ -1,19 +1,10 @@
-<div id="comment-<%= comment.id %>">
-  <div class="info">
-    <h4 class="name"><%= comment.user.username %></h4>
-  </div>
-  <div class="content">
-    <div class="row">
-      <span class="text"><%= comment.comment %></span>
-    </div>
-    <div class="pull-right">
-      <% if belongs_to_user?(comment) %>
+<div class="w3-container w3-card-2 w3-white comment" id="comment-<%= comment.id %>"><br>
+  <span class="w3-right w3-opacity"><%= time_ago_in_words(comment.created_at) %> ago
+    <% if belongs_to_user?(comment) %>
         <%= link_to comment_path(comment), method: :delete, class: 'btn btn-danger btn-sm', remote: true do %>
-          <% fa_icon 'trash' %>
+            <% fa_icon 'trash' %>
         <% end %>
-      <% end %>
-    </div>
-  </div>
-  <br>
-  <hr>
+    <% end %></span>
+  <h5><%= comment.user.username %></h5>
+  <p class="comment-text"><%= comment.comment %></p>
 </div>

@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   end
 
   def mentionable
-    render json: @user.following_users.as_json(only: [:id, :username]), root: false
+    render json: @user.company.users.as_json(only: [:id, :username]), root: false
   end
 
   private

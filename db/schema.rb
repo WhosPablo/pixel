@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161112233256) do
+ActiveRecord::Schema.define(version: 20161118061519) do
 
   create_table "comments", force: :cascade do |t|
     t.string   "title",            limit: 50, default: ""
@@ -24,6 +24,14 @@ ActiveRecord::Schema.define(version: 20161112233256) do
     t.index ["commentable_id"], name: "index_comments_on_commentable_id"
     t.index ["commentable_type"], name: "index_comments_on_commentable_type"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "companies", force: :cascade do |t|
+    t.string   "name"
+    t.string   "domain"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["domain"], name: "index_companies_on_domain", unique: true
   end
 
   create_table "follows", force: :cascade do |t|
@@ -75,6 +83,8 @@ ActiveRecord::Schema.define(version: 20161112233256) do
     t.string   "last_name"
     t.string   "username",               default: "",    null: false
     t.boolean  "is_ghost_user",          default: false, null: false
+    t.integer  "companies_id"
+    t.index ["companies_id"], name: "index_users_on_companies_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true

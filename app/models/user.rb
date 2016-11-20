@@ -5,8 +5,13 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable, :omniauth_providers => [:google_oauth2]
   before_save :downcase_fields
-  before_create :set_username_on_create
+  before_create :assign_company, :set_username_on_create
 
+  validate do |user|
+    user.must_have_corp_email
+  end
+
+  belongs_to :company, class_name: 'Company', foreign_key: :companies_id
   has_many :comments
   has_many :questions_asked, class_name: 'Question', foreign_key: :user_id
   has_many :question_recipients
@@ -39,14 +44,29 @@ class User < ActiveRecord::Base
             password: Devise.friendly_token[0,20]
         )
     end
-    ImportDirectoryContactsJob.perform_later access_token, user
-    user
+    if not user.errors.empty?
+      user
+    else
+      ImportDirectoryContactsJob.perform_later access_token, user
+      user
+    end
+  end
+
+  def must_have_corp_email
+    domain = self.email.split("@").second
+    #TODO add more checks
+    errors.add(:base, 'Must sign in with corporate email') unless domain != "gmail.com" and domain != "hotmail.com"
   end
 
   def full_name
     if self.first_name and self.last_name
       [self.first_name, self.last_name].join(' ')
     end
+  end
+
+  def full_name=(full_name)
+    self.first_name = full_name.split(' ').first
+    self.last_name  = full_name.split(' ').second
   end
 
 
@@ -75,9 +95,15 @@ class User < ActiveRecord::Base
     self.email.downcase!
   end
 
+  def assign_company
+    self.company = Company.find_or_create_by(domain: self.email.split("@").second)
+  end
+
   def set_username_on_create
     if self.first_name and self.last_name
-      same_name_users = User.where(first_name: self.first_name.downcase, last_name: self.last_name.downcase)
+      company = Company.find_by_domain(self.email.split("@").second)
+      same_name_users = User.where(first_name: self.first_name.downcase, last_name: self.last_name.downcase, companies_id:
+          company.id)
       if same_name_users and same_name_users.count > 0
         self.username = "#{self.first_name.downcase}.#{self.last_name.downcase}.#{same_name_users.count.to_s.rjust(2, '0')}"
       else

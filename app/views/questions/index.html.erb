@@ -1,33 +1,31 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Questions</h1>
+<h1 class="title">Questions</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Body</th>
-      <th>User</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
 
-  <tbody>
-    <% @questions.each do |question| %>
-      <tr>
-        <td><%= question.title %></td>
-        <td><%= question.body %></td>
-        <td><%= question.user.email %></td>
-        <td><%= link_to 'Show', question %></td>
-        <% if question.belongs_to(current_user) %>
-        <td><%= link_to 'Edit', edit_question_path(question) %></td>
-        <td><%= link_to 'Destroy', question, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <% end %>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<%= render 'form', question: @new_question %>
 
-<br>
+
+<% @questions.each do |question| %>
+    <div id="question-<%= question.id %>" class="question">
+      <div class="row">
+        <div class="col-lg-9 col-lg-offset-1">
+          <%= render question, remote: false %>
+        </div>
+        <div class="row">
+          <div class="col-lg-7 col-lg-offset-2">
+            <%= render 'comments/form', commentable: question %>
+            <div class="comments">
+              <%= render(question.comments) || render('shared/no_resource', resources: 'Comments') %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+<% end %>
+
+
 
 <%= link_to 'New Question', new_question_path %>
+
+

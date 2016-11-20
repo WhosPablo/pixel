@@ -1,12 +1,17 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_question, only: [:show, :edit, :update, :destroy]
-  before_action :require_permission, only: [ :edit, :update, :destroy]
+  before_action :require_permission, only: [:show]
+  before_action :require_ownership, only: [:edit, :update, :destroy]
 
   # GET /questions
   # GET /questions.json
   def index
-    @questions = Question.all
+    @new_question = Question.new
+    #TODO change waiting on https://github.com/rails/rails/issues/24055
+    @questions = Question.left_outer_joins(:question_recipients).where('question_recipients.user_id = ? OR questions.user_id = ?',
+                                                            current_user.id, current_user.id)
+
   end
 
   # GET /questions/1
@@ -27,11 +32,19 @@ class QuestionsController < ApplicationController
   # POST /questions
   # POST /questions.json
   def create
-    @question = Question.new(question_params)
+    begin
+      ## TODO fix error messages
+      @question = Question.new(question_params)
+    rescue ActiveRecord::RecordInvalid => e
+      respond_to do |format|
+        format.html { render :new }
+        format.json { render json: @question.errors, status: :unprocessable_entity }
+      end
+    end
 
     @question.user = current_user
 
-    respond_to do |format|
+    respond_to do |format|8
       if @question.save
         send_initial_email_to_all_recipients
         format.html { redirect_to @question, notice: 'Question was successfully created.' }
@@ -80,13 +93,19 @@ class QuestionsController < ApplicationController
     end
 
     def require_permission
+      unless @question.is_recipient current_user or @question.belongs_to current_user
+        redirect_to root_path, :alert => 'Unauthorized'
+      end
+    end
+
+    def require_ownership
       unless @question.belongs_to current_user
         redirect_to question_path, :alert => 'Unauthorized'
       end
     end
 
   def send_initial_email_to_recipients_csv(recipients_csv)
-    recipients_users = @question.convert_recipients_csv_to_user_objs(recipients_csv)
+    recipients_users = @question.recipients_csv_to_user_objs(recipients_csv)
     recipients_users.each do | recipient |
       UserMailer.question_recipient_email(recipient, @question).deliver_now
     end

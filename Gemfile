@@ -57,6 +57,9 @@ gem 'acts_as_commentable'
 # Easy forms
 gem 'simple_form'
 
+# Google material design
+gem 'material_design_lite-rails', '~> 1.2'
+
 
 group :development do
   gem 'better_errors'

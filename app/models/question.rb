@@ -10,17 +10,21 @@ class Question < ApplicationRecord
     user_id == user_to_check.id
   end
 
+  def is_recipient(user_to_check)
+    self.question_recipients.include?(user_to_check)
+  end
+
   def recipients_list
     self.recipients.map { |t| t.username }.join(", ")
   end
 
   def recipients_list=(recipient_csv)
-    user_recipients = convert_recipients_csv_to_user_objs(recipient_csv)
+    user_recipients = recipients_csv_to_user_objs(recipient_csv)
     self.recipients << user_recipients
   end
 
   #TODO maybe move this from here
-  def convert_recipients_csv_to_user_objs(recipients)
+  def recipients_csv_to_user_objs(recipients)
     recipients = recipients.split(/,\s+/)
 
     recipients.map do | recipient_username_or_email |
@@ -31,7 +35,11 @@ class Question < ApplicationRecord
       #TODO fix race condition here between checking if user exists and creating one
       if recipient_by_username.blank? and recipient_by_email.blank?
         #TODO add email checks
-        User.create_ghost_user(email: recipient_username_or_email.downcase)
+        begin
+          User.create_ghost_user(email: recipient_username_or_email.downcase)
+        rescue ActiveRecord::RecordInvalid => e
+          raise e
+        end
       elsif recipient_by_email.blank? # Then we must have found him by username
         recipient_by_username
       else

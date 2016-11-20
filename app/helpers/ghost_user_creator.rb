@@ -2,7 +2,6 @@ require 'google/apis/admin_directory_v1'
 require 'google/apis/people_v1'
 require 'google/api_client/client_secrets.rb'
 
-# TODO spin a thread to do this
 class GhostUserCreator
   # Alias the modules
   ADMIN_DIRECTORY_API = Google::Apis::AdminDirectoryV1
@@ -11,6 +10,7 @@ class GhostUserCreator
 
   def self.start_with_google_token(access_token, current_user)
     unless get_company_domain(current_user).casecmp("gmail.com") == 0
+      Company.find_or_create_by(domain:get_company_domain(current_user).downcase)
       process_directory_contacts(access_token, get_company_domain(current_user), current_user)
     end
 
@@ -38,11 +38,12 @@ class GhostUserCreator
   # end
 
   def self.import_users_from_directory(external_user_contacts, current_user)
+    company = Company.find_by_domain(get_company_domain(current_user).downcase)
     external_user_contacts.each do | external_user_info |
-      user_contact = User.find_or_create_by(email: external_user_info.primary_email.downcase) do |user|
-        create_ghost_user_from_directory(external_user_info, user)
+      User.find_or_create_by(email: external_user_info.primary_email.downcase) do |user|
+        create_ghost_user_from_directory(external_user_info, user, company)
       end
-      current_user.follow(user_contact)
+      current_user.company = company
     end
   end
 
@@ -58,19 +59,21 @@ class GhostUserCreator
   #   end
   # end
 
-  def self.create_ghost_user_from_directory(new_user_info, new_user_object)
+  def self.create_ghost_user_from_directory(new_user_info, new_user_object, company)
     if new_user_info.name
       new_user_object.first_name = new_user_info.name.given_name
       new_user_object.last_name = new_user_info.name.family_name
     end
     new_user_object.is_ghost_user = true
+    new_user_object.company = company
     new_user_object.password = Devise.friendly_token[0,20]
     new_user_object.save!
   end
 
   # def self.create_ghost_user_from_contacts(new_user_info, new_user_object)
   #   if new_user_info.names
-  #     new_user_object.first_name = new_user_info.names.first.given_name
+  #     new_user_objec
+  # t.first_name = new_user_info.names.first.given_name
   #     new_user_object.last_name = new_user_info.names.first.family_name
   #   end
   #   new_user_object.is_ghost_user = true
