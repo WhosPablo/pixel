@@ -6,6 +6,8 @@ class Question < ApplicationRecord
 
   acts_as_commentable
 
+  default_scope -> { order('created_at DESC') }
+
   def belongs_to(user_to_check)
     user_id == user_to_check.id
   end

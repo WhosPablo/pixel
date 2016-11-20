@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
+  # :lockable, :timeoutable
+  devise :confirmable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable, :omniauth_providers => [:google_oauth2]
   before_save :downcase_fields
@@ -20,15 +20,17 @@ class User < ActiveRecord::Base
   acts_as_follower
   acts_as_followable
 
-  #TODO allow for more fields to be passed and have create ghost users call this?
+  #TODO allow for more fields to be passed and have create_ghost_users call this?
   def self.create_ghost_user(user_info)
     if user_info[:email]
       User.find_or_create_by(email: user_info[:email].downcase) do |new_user_obj|
         new_user_obj.is_ghost_user = true
         new_user_obj.password = Devise.friendly_token[0,20]
+        new_user_obj.skip_confirmation!
         new_user_obj.save!
       end
     end
+    #TODO what if no email is passed?
   end
 
   def self.from_omniauth(access_token)
@@ -43,13 +45,14 @@ class User < ActiveRecord::Base
             email: data["email"],
             password: Devise.friendly_token[0,20]
         )
+        user.skip_confirmation!
     end
-    if not user.errors.empty?
-      user
-    else
+
+    if user.errors.empty?
       ImportDirectoryContactsJob.perform_later access_token, user
-      user
     end
+    user
+
   end
 
   def must_have_corp_email
@@ -65,8 +68,9 @@ class User < ActiveRecord::Base
   end
 
   def full_name=(full_name)
-    self.first_name = full_name.split(' ').first
-    self.last_name  = full_name.split(' ').second
+    name_array = full_name.split(' ')
+    self.first_name = name_array.first
+    self.last_name  = name_array.drop(1).join(' ')
   end
 
 
@@ -74,6 +78,9 @@ class User < ActiveRecord::Base
     if self.is_ghost_user
       self.update(ghost_user_to_user_params(params))
       self.is_ghost_user = false
+      self.confirmed_at = nil
+      self.send_confirmation_instructions
+      set_username_on_create #TODO bug where it will always find itself as a user
       self.save!
       self
     end
@@ -82,7 +89,7 @@ class User < ActiveRecord::Base
   private
 
   def ghost_user_to_user_params(params)
-    params.require(:user).permit(:first_name, :last_name, :is_ghost_user, :password, :password_confirmation)
+    params.require(:user).permit(:full_name, :is_ghost_user, :password, :password_confirmation)
   end
 
   def downcase_fields
@@ -104,10 +111,11 @@ class User < ActiveRecord::Base
       company = Company.find_by_domain(self.email.split("@").second)
       same_name_users = User.where(first_name: self.first_name.downcase, last_name: self.last_name.downcase, companies_id:
           company.id)
+      last_name_no_space = self.last_name.split(' ').join
       if same_name_users and same_name_users.count > 0
-        self.username = "#{self.first_name.downcase}.#{self.last_name.downcase}.#{same_name_users.count.to_s.rjust(2, '0')}"
+        self.username = "#{self.first_name.downcase}.#{last_name_no_space.downcase}.#{same_name_users.count.to_s.rjust(2, '0')}"
       else
-        self.username = "#{self.first_name.downcase}.#{self.last_name.downcase}"
+        self.username = "#{self.first_name.downcase}.#{last_name_no_space.downcase}"
       end
     else
       self.username = self.email.downcase

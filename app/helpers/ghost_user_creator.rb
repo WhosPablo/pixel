@@ -21,7 +21,7 @@ class GhostUserCreator
   def self.process_directory_contacts(access_token, domain, current_user)
     directory_api_call = ADMIN_DIRECTORY_API::DirectoryService.new
     directory_api_call.authorization = AccessToken.new(access_token["credentials"]["token"])
-    response = directory_api_call.list_users(domain: domain, view_type: "domain_public", max_results: 500)
+    response = directory_api_call.list_users(domain: domain, view_type: "domain_public", max_results: 30)
     if response.users
       import_users_from_directory(response.users, current_user)
     end
@@ -65,6 +65,7 @@ class GhostUserCreator
       new_user_object.last_name = new_user_info.name.family_name
     end
     new_user_object.is_ghost_user = true
+    new_user_object.skip_confirmation!
     new_user_object.company = company
     new_user_object.password = Devise.friendly_token[0,20]
     new_user_object.save!
