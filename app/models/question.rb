@@ -1,6 +1,5 @@
 class Question < ApplicationRecord
   belongs_to :user
-
   has_many :question_recipients
   has_many :recipients, through: :question_recipients, source: :user
 
@@ -11,6 +10,8 @@ class Question < ApplicationRecord
   validate do |question|
     question.recipients_are_inside_company
   end
+
+  attr_accessor :headless
 
   def belongs_to(user_to_check)
     user_id == user_to_check.id

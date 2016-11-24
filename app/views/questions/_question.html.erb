@@ -1,7 +1,10 @@
 
   <div class="w3-container w3-card-2 w3-white w3-round question"><br>
     <span class="w3-right w3-opacity"><%= time_ago_in_words(question.created_at) %> ago</span>
-    <h4><%= question.user.full_name.titleize %></h4><br>
+    <% unless question.headless %>
+      <h4><%= question.user.full_name.titleize %></h4><br>
+    <% end %>
+
     <h6><% question.recipients.each do |recipient| %>
             <%= link_to recipient.username, user_path(recipient)%>,
       <% end %></h6><br>

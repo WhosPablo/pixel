@@ -1,7 +1,7 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_question, only: [:show, :edit, :update, :destroy]
-  before_action :require_permission, only: [:show]
+  before_action :set_headlessness, only: [:show]
   before_action :require_ownership, only: [:edit, :update, :destroy]
 
   # GET /questions
@@ -91,9 +91,10 @@ class QuestionsController < ApplicationController
       params.require(:question).permit(:title, :body, :recipients_list_csv)
     end
 
-    def require_permission
+    def set_headlessness
       unless @question.is_recipient current_user or @question.belongs_to current_user
-        redirect_to root_path, :alert => 'Unauthorized'
+        @question.headless = true
+        @question.user = nil # To avoid a programming error causing a leak
       end
     end
 
