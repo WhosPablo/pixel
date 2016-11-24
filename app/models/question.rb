@@ -8,6 +8,10 @@ class Question < ApplicationRecord
 
   default_scope -> { order('created_at DESC') }
 
+  validate do |question|
+    question.recipients_are_inside_company
+  end
+
   def belongs_to(user_to_check)
     user_id == user_to_check.id
   end
@@ -16,16 +20,25 @@ class Question < ApplicationRecord
     self.question_recipients.include?(user_to_check)
   end
 
-  def recipients_list
+  def recipients_are_inside_company
+    self.question_recipients.each do | recipient |
+      if self.user.company != recipient.user.company
+        errors.add(:base, "You can only ask people from your company and #{recipient.user.username} is not in your company")
+      end
+    end
+
+  end
+
+  def recipients_list_csv
     self.recipients.map { |t| t.username }.join(", ")
   end
 
-  def recipients_list=(recipient_csv)
+  def recipients_list_csv=(recipient_csv)
     user_recipients = recipients_csv_to_user_objs(recipient_csv)
     self.recipients << user_recipients
   end
 
-  #TODO maybe move this from here
+  #TODO maybe move this from here to somewhere else
   def recipients_csv_to_user_objs(recipients)
     recipients = recipients.split(/,\s+/)
 
@@ -36,10 +49,11 @@ class Question < ApplicationRecord
 
       #TODO fix race condition here between checking if user exists and creating one
       if recipient_by_username.blank? and recipient_by_email.blank?
-        #TODO add email checks
+        #TODO add email checks instead of trying to create user?
         begin
           User.create_ghost_user(email: recipient_username_or_email.downcase)
         rescue ActiveRecord::RecordInvalid => e
+          errors.add(:base, e.message + " for " + recipient_username_or_email)
           raise e
         end
       elsif recipient_by_email.blank? # Then we must have found him by username
@@ -47,7 +61,7 @@ class Question < ApplicationRecord
       else
         recipient_by_email
       end
-    end
+    end .compact
   end
 
 end

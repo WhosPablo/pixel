@@ -1,9 +1,12 @@
-<body>
-  <h1>A Q & A Platform</h1>
-  <br/>
+<p id="notice"><%= notice %></p>
+
+<h1 class="title">Questions</h1>
+
+<%= link_to 'New Question', new_question_path %>
 
 
-  <%= link_to user_google_oauth2_omniauth_authorize_path do %>
-    <%= image_tag image_url "google/btn_google_signin_dark_normal_web@2x.png", class: "" %>
-<% end %>
-</body>
+<%= render 'questions/form', question: @new_question %>
+
+<%= render 'questions/question_list', questions: @questions %>
+
+

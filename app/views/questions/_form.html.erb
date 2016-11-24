@@ -1,11 +1,10 @@
 
 <div id="mentionable-data" data-content="<%= mentionable_user_path(current_user)%>"></div>
-<%= simple_form_for question, remote: true do |f| %>
+<%= simple_form_for question, html: { class: "question-form"}, remote: true do |f| %>
 
   <%= render 'shared/error_messages', object: f.object %>
 
-  <%= f.input :title %>
-  <%= f.input :recipients_list, input_html: { class: 'input-mentionable', value: nil }%>
+  <%= f.input :recipients_list_csv, input_html: {class: 'input-mentionable', value: nil }%>
   <%= f.input :body, as: :text %>
   <%= f.button :submit %>
 

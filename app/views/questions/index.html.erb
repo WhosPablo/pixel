@@ -1,32 +1,8 @@
 <p id="notice"><%= notice %></p>
 
-<h1 class="title">Questions</h1>
 
-<%= link_to "Change your password", edit_user_registration_path %>
-
-<%= render 'form', question: @new_question %>
+<%= render 'questions/question_list', questions: @questions %>
 
 
-<% @questions.each do |question| %>
-    <div id="question-<%= question.id %>" class="question">
-      <div class="row">
-        <div class="col-lg-9 col-lg-offset-1">
-          <%= render question, remote: false %>
-        </div>
-        <div class="row">
-          <div class="col-lg-7 col-lg-offset-2">
-            <%= render 'comments/form', commentable: question %>
-            <div class="comments">
-              <%= render(question.comments) || render('shared/no_resource', resources: 'Comments') %>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-<% end %>
-
-
-
-<%= link_to 'New Question', new_question_path %>
 
 

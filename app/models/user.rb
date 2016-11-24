@@ -57,8 +57,9 @@ class User < ActiveRecord::Base
 
   def must_have_corp_email
     domain = self.email.split("@").second
-    #TODO add more checks
-    errors.add(:base, 'Must sign in with corporate email') unless domain != "gmail.com" and domain != "hotmail.com"
+    #TODO checks for more personal accounts
+    errors.add(:base, 'Email must have a corporate domain') unless domain != "gmail.com" and domain != "hotmail.com" and
+        domain != "outlook.com"
   end
 
   def full_name

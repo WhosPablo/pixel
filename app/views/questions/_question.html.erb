@@ -2,8 +2,20 @@
   <div class="w3-container w3-card-2 w3-white w3-round question"><br>
     <span class="w3-right w3-opacity"><%= time_ago_in_words(question.created_at) %> ago</span>
     <h4><%= question.user.full_name.titleize %></h4><br>
-    <h6><%= question.recipients_list %></h6><br>
+    <h6><% question.recipients.each do |recipient| %>
+            <%= link_to recipient.username, user_path(recipient)%>,
+      <% end %></h6><br>
     <hr class="w3-clear">
     <p><%= question.body %></p>
+    <div class="pull-right">
+      <% if belongs_to_user?(question) %>
+          <%= link_to edit_question_path(question), class: 'btn btn-primary btn-sm' do %>
+              <% fa_icon 'pencil' %>
+          <% end %>
+          <%= link_to question_path(question), method: :delete, class:'btn btn-danger btn-sm', remote: true do %>
+              <% fa_icon 'trash' %>
+          <% end %>
+      <% end %>
+    </div>
     <%= render 'shared/actions', resource: question %>
   </div>

@@ -20,10 +20,7 @@
 <% end %>
 
 <% unless alert.blank? %>
-    <div class="alert alert-danger alert-dismissable alert-fixed">
-      <%= alert %>
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    </div>
+    <%= render 'shared/alert', alert: alert %>
 <% end %>
 
 <div class="container">

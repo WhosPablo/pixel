@@ -1,0 +1,4 @@
+<% @messages.each do |message| %>
+console.log("<%= message %>");
+$("body").prepend("<%= escape_javascript(render :partial => 'shared/alert', :locals => {:alert => message}) %>");
+<% end %>

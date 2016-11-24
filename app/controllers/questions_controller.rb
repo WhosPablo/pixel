@@ -7,11 +7,9 @@ class QuestionsController < ApplicationController
   # GET /questions
   # GET /questions.json
   def index
-    @new_question = Question.new
     #TODO change waiting on https://github.com/rails/rails/issues/24055
     @questions = Question.left_outer_joins(:question_recipients).where('question_recipients.user_id = ? OR questions.user_id = ?',
                                                             current_user.id, current_user.id)
-
   end
 
   # GET /questions/1
@@ -33,25 +31,26 @@ class QuestionsController < ApplicationController
   # POST /questions.json
   def create
     begin
-      ## TODO fix error messages
+      ##TODO clean this up. Doing this to be able to add recipient csvs
       @question = Question.new(question_params)
     rescue ActiveRecord::RecordInvalid => e
       respond_to do |format|
-        format.html { render :new }
-        format.json { render json: @question.errors, status: :unprocessable_entity }
+        @messages =  [] << e.message
+        format.html { render :new, notice: e.message }
+        format.js { render :error, status: :unprocessable_entity }
       end
-    end
-
-    @question.user = current_user
-
-    respond_to do |format|8
-      if @question.save
-        send_initial_email_to_all_recipients
-        format.html { redirect_to @question, notice: 'Question was successfully created.' }
-        format.json { render :show, status: :created, location: @question }
-      else
-        format.html { render :new }
-        format.json { render json: @question.errors, status: :unprocessable_entity }
+    else
+      @question.user = current_user
+      respond_to do |format|
+        if @question.save
+          send_initial_email_to_all_recipients
+          format.html { redirect_to @question, notice: 'Question was successfully created.' }
+          format.js
+        else
+          @messages = @question.errors.full_messages
+          format.html { render :new, notice: @question.errors.message }
+          format.js { render :error, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -61,7 +60,7 @@ class QuestionsController < ApplicationController
   def update
     respond_to do |format|
       if @question.update(question_params)
-        send_initial_email_to_recipients_csv(question_params[:recipients_list])
+        send_initial_email_to_recipients_csv(question_params[:recipients_list_csv])
         format.html { redirect_to @question, notice: 'Question was successfully updated.' }
         format.json { render :show, status: :ok, location: @question }
       else
@@ -89,7 +88,7 @@ class QuestionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def question_params
-      params.require(:question).permit(:title, :body, :recipients_list)
+      params.require(:question).permit(:title, :body, :recipients_list_csv)
     end
 
     def require_permission

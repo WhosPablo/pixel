@@ -1,2 +1,2 @@
-$("#<%= @commentable_type.downcase %>-<%= @commentable.id %> .comments").prepend("<%=j render(@comment) %>");
-$("#comment_text").val("");
+$(".questions-list").prepend('<div id="question-<%= @question.id %>" class="question"><%=j render(@question) %><div>');
+$(".question-form")[0].reset();

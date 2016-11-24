@@ -3,16 +3,12 @@ Rails.application.routes.draw do
 
   resources :comments, only: [:create, :destroy]
 
-  authenticated :user do
-    get :mentionable => 'users/mentions#mentionable'
-    root :to => 'questions#index', as: :authenticated_root
+  unauthenticated :user do
+    root 'home#front_page'
   end
-  root :to => 'home#index'
 
-  resources :users , only: [:mentionable] do
-    member do
-      get :mentionable
-    end
+  authenticated :user do
+    root :to => 'home#index', as: :authenticated_root
   end
 
   devise_for :users, controllers: {
@@ -24,6 +20,12 @@ Rails.application.routes.draw do
     delete "/users/sign_out" => "devise/sessions#destroy"
   end
 
+  resources :users , only: [:show, :mentionable] do
+    member do
+      get :mentionable
+    end
+  end
 
+  root :to => 'home#front_page'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
