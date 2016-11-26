@@ -30,27 +30,17 @@ class QuestionsController < ApplicationController
   # POST /questions
   # POST /questions.json
   def create
-    begin
-      ##TODO clean this up. Doing this to be able to add recipient csvs
-      @question = Question.new(question_params)
-    rescue ActiveRecord::RecordInvalid => e
-      respond_to do |format|
-        @messages =  [] << e.message
-        format.html { render :new, notice: e.message }
+    @question = Question.new(question_params)
+    @question.user = current_user
+    respond_to do |format|
+      if @question.save
+        send_initial_email_to_all_recipients
+        format.html { redirect_to @question, notice: 'Question was successfully created.' }
+        format.js
+      else
+        @messages = @question.errors.full_messages
+        format.html { render :new, notice: @question.errors.message }
         format.js { render :error, status: :unprocessable_entity }
-      end
-    else
-      @question.user = current_user
-      respond_to do |format|
-        if @question.save
-          send_initial_email_to_all_recipients
-          format.html { redirect_to @question, notice: 'Question was successfully created.' }
-          format.js
-        else
-          @messages = @question.errors.full_messages
-          format.html { render :new, notice: @question.errors.message }
-          format.js { render :error, status: :unprocessable_entity }
-        end
       end
     end
   end
@@ -94,7 +84,7 @@ class QuestionsController < ApplicationController
     def set_headlessness
       unless @question.is_recipient current_user or @question.belongs_to current_user
         @question.headless = true
-        @question.user = nil # To avoid a programming error causing a leak
+        @question.user = nil # To avoid a programming error causing a leak of information
       end
     end
 

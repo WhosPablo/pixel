@@ -11,11 +11,13 @@ class Question < ApplicationRecord
   default_scope -> { order('created_at DESC') }
 
   after_create :create_all_activity
+  before_validation :recipients_csv_to_user_objs, on: :create
   validate do |question|
     question.recipients_are_inside_company
   end
 
   attr_accessor :headless
+  attr_accessor :recipients_csv
 
   def belongs_to(user_to_check)
     user_id == user_to_check.id
@@ -35,36 +37,25 @@ class Question < ApplicationRecord
   end
 
   def recipients_list_csv
-    self.recipients.map { |t| t.username }.join(", ")
+    self.recipients.map { |t| t.username }.to_sentence
   end
 
   def recipients_list_csv=(recipient_csv)
-    user_recipients = recipients_csv_to_user_objs(recipient_csv)
-    self.recipients << user_recipients
+    self.recipients_csv = recipient_csv
   end
 
-  #TODO maybe move this from here to somewhere else
-  def recipients_csv_to_user_objs(recipients)
-    recipients = recipients.split(/,\s+/)
+  def recipients_csv_to_user_objs
+    recipients = self.recipients_csv.split(/,\s+/)
 
-    recipients.map do | recipient_username_or_email |
+    self.recipients << recipients.map do | recipient_username_or_email |
 
-      recipient_by_username = User.find_by_username(recipient_username_or_email.downcase)
-      recipient_by_email = User.find_by_email(recipient_username_or_email.downcase)
+      recipient = find_recipient_by_username_or_email(recipient_username_or_email.downcase, self.user.companies_id)
 
       #TODO fix race condition here between checking if user exists and creating one
-      if recipient_by_username.blank? and recipient_by_email.blank?
-        #TODO add email checks instead before trying to create a user?
-        begin
-          User.create_ghost_user(email: recipient_username_or_email.downcase)
-        rescue ActiveRecord::RecordInvalid => e
-          errors.add(:base, e.message + " for " + recipient_username_or_email)
-          raise e
-        end
-      elsif recipient_by_email.blank? # Then we must have found him by username
-        recipient_by_username
+      if recipient.blank?
+        create_ghost_user_from_recipient(recipient_username_or_email, self.user)
       else
-        recipient_by_email
+        recipient
       end
     end .compact
   end
@@ -74,4 +65,19 @@ class Question < ApplicationRecord
   def create_all_activity
     ActivityCreator.notifications_for_questions(self)
   end
+
+  def find_recipient_by_username_or_email(username_or_email, company_id)
+    User.where('(username = ? AND companies_id = ?) OR email = ?', username_or_email, company_id, username_or_email)
+  end
+
+  def create_ghost_user_from_recipient(recipient_username_or_email, default_user)
+    #TODO add email checks instead before trying to create a user?
+    begin
+      User.create_ghost_user(email: recipient_username_or_email.downcase)
+    rescue ActiveRecord::RecordInvalid => e
+      errors.add(:base, e.message + " for ''" + recipient_username_or_email + "''")
+      default_user #return yourself as default (should fail validation anyways due to errors )
+    end
+  end
+
 end
