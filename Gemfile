@@ -60,6 +60,7 @@ gem 'simple_form'
 # Google material design
 gem 'material_design_lite-rails', '~> 1.2'
 
+gem 'public_activity'
 
 group :development do
   gem 'better_errors'

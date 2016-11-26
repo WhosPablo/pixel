@@ -1,9 +1,10 @@
 <div class="w3-container w3-card-2 w3-white comment"><br>
   <h5><%= current_user.username %></h5>
-    <%= form_tag comments_path(commentable_type: commentable.class.to_s, commentable_id: commentable.id), id: 'new_comment', method: :post,
+    <%= form_tag comments_path(commentable_type: commentable.class.to_s, commentable_id: commentable.id),
+                 id: "#{commentable.class.to_s.downcase}-#{commentable.id}-new-comment", method: :post,
                  class:"mdl-textfield mdl-js-textfield", remote: true do %>
       <div class="form-group">
-        <%= text_area_tag :comment_text, nil, placeholder: 'Enter a response', class: 'form-control input-mentionable mdl-textfield__input' %>
+        <%= text_area_tag :comment_text, nil, placeholder: 'Enter a response', class: 'form-control input-mentionable mdl-textfield__input comment-form-text' %>
       </div>
       <%= submit_tag :comment, class: 'btn btn-primary' %>
     <% end %>

@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   resources :questions
-
   resources :comments, only: [:create, :destroy]
 
   unauthenticated :user do
@@ -9,6 +8,7 @@ Rails.application.routes.draw do
 
   authenticated :user do
     root :to => 'home#index', as: :authenticated_root
+    mount ActionCable.server => '/cable'
   end
 
   devise_for :users, controllers: {
@@ -23,6 +23,8 @@ Rails.application.routes.draw do
   resources :users , only: [:show, :mentionable] do
     member do
       get :mentionable
+      get :notifications
+      put :clear_notifications
     end
   end
 

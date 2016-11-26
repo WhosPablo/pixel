@@ -1,12 +1,16 @@
 class Question < ApplicationRecord
+
+  include PublicActivity::Model
   belongs_to :user
   has_many :question_recipients
   has_many :recipients, through: :question_recipients, source: :user
 
   acts_as_commentable
+  tracked only: [:create], owner: proc { |_controller, model| model.user } #, recipient: proc { |_controller, model| model.recipients }
 
   default_scope -> { order('created_at DESC') }
 
+  after_create :create_all_activity
   validate do |question|
     question.recipients_are_inside_company
   end
@@ -18,7 +22,7 @@ class Question < ApplicationRecord
   end
 
   def is_recipient(user_to_check)
-    self.question_recipients.include?(user_to_check)
+    self.question_recipients.exists?(user_id: user_to_check.id)
   end
 
   def recipients_are_inside_company
@@ -50,7 +54,7 @@ class Question < ApplicationRecord
 
       #TODO fix race condition here between checking if user exists and creating one
       if recipient_by_username.blank? and recipient_by_email.blank?
-        #TODO add email checks instead of trying to create user?
+        #TODO add email checks instead before trying to create a user?
         begin
           User.create_ghost_user(email: recipient_username_or_email.downcase)
         rescue ActiveRecord::RecordInvalid => e
@@ -65,4 +69,9 @@ class Question < ApplicationRecord
     end .compact
   end
 
+  private
+
+  def create_all_activity
+    ActivityCreator.notifications_for_questions(self)
+  end
 end

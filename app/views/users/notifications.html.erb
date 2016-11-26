@@ -1,0 +1,8 @@
+<h4> You have <%= pluralize(@activities.count, 'notification') %></h4>
+<ul>
+  <% @activities.each do |activity| %>
+      <li>
+        <%= render "shared/notification_helper", activity: activity %>
+      </li>
+  <% end %>
+</ul>

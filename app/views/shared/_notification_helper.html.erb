@@ -1,0 +1,6 @@
+<%= link_to(activity.recipient) do %>
+    <div class="activity">
+      <%= activity.owner.full_name.titleize if activity.owner %>
+      <%= render_activity activity %>
+    </div>
+<% end %>

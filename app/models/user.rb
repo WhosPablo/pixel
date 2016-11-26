@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+
+  include PublicActivity::Model
   # Include default devise modules. Others available are:
   # :lockable, :timeoutable
   devise :confirmable, :database_authenticatable, :registerable,
@@ -65,6 +67,8 @@ class User < ActiveRecord::Base
   def full_name
     if self.first_name and self.last_name
       [self.first_name, self.last_name].join(' ')
+    else # fallback on username which is always present
+      self.username
     end
   end
 
@@ -74,6 +78,9 @@ class User < ActiveRecord::Base
     self.last_name  = name_array.drop(1).join(' ')
   end
 
+  def get_new_notifications
+    self.activities.where('created_at > ?', self.last_notification_ack).order(created_at: :desc)
+  end
 
   def turn_ghost_user_to_real_user(params)
     if self.is_ghost_user
@@ -81,7 +88,7 @@ class User < ActiveRecord::Base
       self.is_ghost_user = false
       self.confirmed_at = nil
       self.send_confirmation_instructions
-      set_username_on_create #TODO bug where it will always find itself as a user
+      #set_username_on_create #TODO bug where it will always find itself as a user before we can address this
       self.save!
       self
     end
@@ -112,11 +119,11 @@ class User < ActiveRecord::Base
       company = Company.find_by_domain(self.email.split("@").second)
       same_name_users = User.where(first_name: self.first_name.downcase, last_name: self.last_name.downcase, companies_id:
           company.id)
-      last_name_no_space = self.last_name.split(' ').join
+      last_name_no_spaces = self.last_name.split(' ').join
       if same_name_users and same_name_users.count > 0
-        self.username = "#{self.first_name.downcase}.#{last_name_no_space.downcase}.#{same_name_users.count.to_s.rjust(2, '0')}"
+        self.username = "#{self.first_name.downcase}.#{last_name_no_spaces.downcase}.#{same_name_users.count.to_s.rjust(2, '0')}"
       else
-        self.username = "#{self.first_name.downcase}.#{last_name_no_space.downcase}"
+        self.username = "#{self.first_name.downcase}.#{last_name_no_spaces.downcase}"
       end
     else
       self.username = self.email.downcase
