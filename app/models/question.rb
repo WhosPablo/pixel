@@ -11,7 +11,7 @@ class Question < ApplicationRecord
   default_scope -> { order('created_at DESC') }
 
   after_create :create_all_activity
-  before_validation :recipients_csv_to_user_objs, on: :create
+  before_validation :convert_recipients
   validate do |question|
     question.recipients_are_inside_company
   end
@@ -44,16 +44,23 @@ class Question < ApplicationRecord
     self.recipients_csv = recipient_csv
   end
 
-  def recipients_csv_to_user_objs
-    recipients = self.recipients_csv.split(/,\s+/)
+  def convert_recipients
+    unless self.recipients_csv.blank?
+      self.recipients << recipients_csv_to_user_obj(self.recipients_csv, self.user)
+    end
 
-    self.recipients << recipients.map do | recipient_username_or_email |
+  end
 
-      recipient = find_recipient_by_username_or_email(recipient_username_or_email.downcase, self.user.companies_id)
 
+  def recipients_csv_to_user_obj(recipients_csv, user)
+    recipients = recipients_csv.split(/,\s+/)
+
+    recipients.map do | recipient_username_or_email |
+
+      recipient = find_recipient_by_username_or_email(recipient_username_or_email.downcase, user.companies_id)
       #TODO fix race condition here between checking if user exists and creating one
       if recipient.blank?
-        create_ghost_user_from_recipient(recipient_username_or_email, self.user)
+        create_ghost_user_from_recipient(recipient_username_or_email, user)
       else
         recipient
       end
@@ -62,12 +69,13 @@ class Question < ApplicationRecord
 
   private
 
+
   def create_all_activity
     ActivityCreator.notifications_for_questions(self)
   end
 
   def find_recipient_by_username_or_email(username_or_email, company_id)
-    User.where('(username = ? AND companies_id = ?) OR email = ?', username_or_email, company_id, username_or_email)
+    User.where('(username = ? AND companies_id = ?) OR email = ?', username_or_email, company_id, username_or_email).first
   end
 
   def create_ghost_user_from_recipient(recipient_username_or_email, default_user)

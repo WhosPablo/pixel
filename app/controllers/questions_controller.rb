@@ -95,7 +95,7 @@ class QuestionsController < ApplicationController
     end
 
   def send_initial_email_to_recipients_csv(recipients_csv)
-    recipients_users = @question.recipients_csv_to_user_objs(recipients_csv)
+    recipients_users = @question.recipients_csv_to_user_obj(recipients_csv, current_user)
     recipients_users.each do | recipient |
       UserMailer.question_recipient_email(recipient, @question).deliver_now
     end
