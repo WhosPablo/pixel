@@ -1,16 +1,16 @@
 <li role="presentation" class="dropdown" id="notifications-button">
   <a id="notifications-link" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" data-userid="<%= current_user.id %>">
-    Notifications <%= "(#{@fresh_activities.count})" if @fresh_activities.count > 0 %><span class="caret"></span>
+    Notifications <span class="notifications-count"><%= "(#{@fresh_activities.count})" if @fresh_activities and @fresh_activities.count > 0 %></span><span class="caret"></span>
   </a>
-  <ul class="dropdown-menu">
+  <ul class="dropdown-menu notification-menu">
     <% @fresh_activities.each do |activity| %>
-        <li>NEW
+        <li>
           <%= render "shared/notification_helper", activity: activity %>
         </li>
     <% end %>
     <% if @other_activities %>
       <% @other_activities.each do |activity| %>
-          <li>Old:
+          <li>
             <%= render "shared/notification_helper", activity: activity %>
           </li>
       <% end %>

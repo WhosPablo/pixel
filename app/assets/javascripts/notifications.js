@@ -3,13 +3,12 @@
  */
 
 $(document).on("turbolinks:load", notificationListeners);
-var foo;
 function notificationListeners() {
     clearNotificationsOnClick();
 }
 
 function clearNotificationsOnClick() {
-    $("#notifications-button").on('click', function(obj){
+    $("#notifications-link").on('click', function(obj){
         $.ajax({
             url: '/users/' + obj.target.dataset['userid'] + '/clear_notifications',
             type: 'PUT',
@@ -20,5 +19,19 @@ function clearNotificationsOnClick() {
     });
 }
 function resetNotificationsCount() {
-    $("#notifications-link").text('Notifications');
+    $(".notifications-count").text('');
+    $("title").text('Quiki');
+}
+
+function incrementNotificationCount() {
+    count = Number($(".notifications-count").text().replace(/[()]/g, ''));
+    count++;
+    string_count = "(" + count + ")";
+    $(".notifications-count").text(string_count);
+    $("title").text('Quiki ' + string_count);
+}
+
+function addNotification(notification) {
+    incrementNotificationCount();
+    $(".notification-menu").prepend("<li>" + notification + "</li>")
 }

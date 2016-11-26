@@ -7,5 +7,7 @@ App.notifications = App.cable.subscriptions.create "NotificationsChannel",
     # Called when the subscription has been terminated by the server
 
   received: (data) ->
-    console.log("foo")
+    if(data['title'] == "Notification")
+      addNotification(data['body'])
+
     # Called when there's incoming data on the websocket for this channel

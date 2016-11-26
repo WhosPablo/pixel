@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Pixel</title>
+  <title>Quiki <%= "(#{@fresh_activities.count})" if @fresh_activities and @fresh_activities.count > 0 %></title>
   <%= stylesheet_link_tag    'application', media: 'all' %>
   <%= javascript_include_tag 'application' %>
   <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">

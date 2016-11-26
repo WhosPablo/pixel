@@ -1,6 +1,7 @@
-<%= link_to(activity.recipient) do %>
+<%-# Have to hack together my own link_to implementation due to the way the file is rendered in activity_creato -%>
+<a href="/<%= activity.recipient.class.to_s.downcase%>s/<%= activity.recipient.id%>" >
     <div class="activity">
       <%= activity.owner.full_name.titleize if activity.owner %>
       <%= render_activity activity %>
     </div>
-<% end %>
+</a>
