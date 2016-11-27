@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 3.0'
+gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 # Use Capistrano for deployment
@@ -68,6 +68,7 @@ gem 'thor', '0.19.1'
 # search
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
+gem 'bonsai-elasticsearch-rails'
 
 
 group :development do
