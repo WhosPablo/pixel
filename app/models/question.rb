@@ -1,23 +1,40 @@
+require 'elasticsearch/model'
+
 class Question < ApplicationRecord
 
+  # Libraries
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
   include PublicActivity::Model
+
+  # Associations
   belongs_to :user
   has_many :question_recipients
   has_many :recipients, through: :question_recipients, source: :user
 
+  #Settings
   acts_as_commentable
+  default_scope -> { order('created_at DESC') }
+  settings index: { number_of_shards: 1 } do
+    mappings dynamic: 'false' do
+      indexes :body, analyzer: 'english'
+    end
+  end
+
   tracked only: [:create], owner: proc { |_controller, model| model.user } #, recipient: proc { |_controller, model| model.recipients }
 
-  default_scope -> { order('created_at DESC') }
-
+  #Validations
   after_create :create_all_activity
   before_validation :convert_recipients
   validate do |question|
     question.recipients_are_inside_company
   end
 
+  # Additional attributes
   attr_accessor :headless
   attr_accessor :recipients_csv
+
+
 
   def belongs_to(user_to_check)
     user_id == user_to_check.id

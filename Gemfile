@@ -62,6 +62,14 @@ gem 'material_design_lite-rails', '~> 1.2'
 
 gem 'public_activity'
 
+gem 'thor', '0.19.1'
+
+
+# search
+gem 'elasticsearch-model'
+gem 'elasticsearch-rails'
+
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'

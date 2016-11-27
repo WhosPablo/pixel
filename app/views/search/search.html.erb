@@ -1,0 +1,21 @@
+<h1>Question Search</h1>
+
+<%= form_for search_path, method: :get do |f| %>
+    <p>
+      <%= f.label "Search for" %>
+      <%= text_field_tag :q, params[:q] %>
+      <%= submit_tag "Go", name: nil %>
+    </p>
+<% end %>
+
+
+
+<ul>
+  <% @questions.each do |question| %>
+      <li>
+        <h3>
+          <%= link_to question.body, controller: "questions", action: "show", id: question._id%>
+        </h3>
+      </li>
+  <% end %>
+</ul>
