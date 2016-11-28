@@ -119,7 +119,6 @@ class User < ActiveRecord::Base
   end
 
   def set_username_on_create
-    byebug
     if self.first_name and self.last_name
       company = Company.find_by_domain(self.email.split("@").second)
       same_name_users = User.where(first_name: self.first_name.downcase, last_name: self.last_name.downcase, companies_id:
