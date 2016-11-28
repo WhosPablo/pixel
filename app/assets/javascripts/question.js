@@ -1,6 +1,7 @@
 
 function createMentionableRecipients(){
     $('.input-mentionable').ready(function() {
+        console.log("here")
         $('.input-mentionable').atwho({
             at: '@',
             data: $('#mentionable-data').data('content'),

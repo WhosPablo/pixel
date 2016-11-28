@@ -299,8 +299,6 @@ GEM
     lumberjack (1.0.10)
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
-    material_design_lite-rails (1.2.1)
-      railties (>= 3.1)
     memoist (0.15.0)
     method_source (0.8.2)
     mime-types (3.1)
@@ -501,7 +499,6 @@ DEPENDENCIES
   jquery-rails
   letter_opener
   listen (~> 3.0.5)
-  material_design_lite-rails (~> 1.2)
   omniauth-google-oauth2
   pg (~> 0.18)
   public_activity

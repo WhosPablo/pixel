@@ -3,10 +3,14 @@
     <%= form_tag comments_path(commentable_type: commentable.class.to_s, commentable_id: commentable.id),
                  id: "#{commentable.class.to_s.downcase}-#{commentable.id}-new-comment", method: :post,
                  class:"mdl-textfield mdl-js-textfield", remote: true do %>
+
       <div class="form-group">
         <%= text_area_tag :comment_text, nil, placeholder: 'Enter a response', class: 'form-control input-mentionable mdl-textfield__input comment-form-text' %>
       </div>
-      <%= submit_tag :comment, class: 'btn btn-primary' %>
+
+      <%= button_tag(type: 'submit', class: "w3-btn w3-theme-d2 w3-margin-bottom") do %>
+              <i class="fa fa-comment"></i> Send response
+      <% end %>
     <% end %>
 </div>
 

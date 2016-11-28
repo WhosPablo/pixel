@@ -14,8 +14,11 @@
 //= require jquery.atwho
 //= require bootstrap
 //= require jquery_ujs
+//= require material
+//= require ripples
 //= require react
 //= require react_ujs
-//= require material
 //= require turbolinks
 //= require_tree .
+// Initialize material js
+$.material.init();

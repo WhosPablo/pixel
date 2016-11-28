@@ -57,11 +57,8 @@ class User < ActiveRecord::Base
 
   end
 
-  def must_have_corp_email
-    domain = self.email.split("@").second
-    #TODO checks for more personal accounts
-    errors.add(:base, 'Email must have a corporate domain') unless domain != "gmail.com" and domain != "hotmail.com" and
-        domain != "outlook.com"
+  def initials
+    self.full_name.split(' ').collect { |s| s[0].upcase }.join('')
   end
 
   def full_name
@@ -80,6 +77,13 @@ class User < ActiveRecord::Base
 
   def get_new_notifications
     self.activities.where('created_at > ?', self.last_notification_ack).order(created_at: :desc)
+  end
+
+  def must_have_corp_email
+    domain = self.email.split("@").second
+    #TODO checks for more personal accounts
+    errors.add(:base, 'Email must have a corporate domain') unless domain != "gmail.com" and domain != "hotmail.com" and
+        domain != "outlook.com"
   end
 
   def turn_ghost_user_to_real_user(params)

@@ -20,4 +20,18 @@
       }
     }
   }
+
+  .initials-container {
+    width: 4em;
+    height: 4em;
+    /* border-radius: 100px; */
+    background: #009688;
+  }
+  .initials {
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 1.8em;
+    line-height: 2.2em;
+  }
 }
