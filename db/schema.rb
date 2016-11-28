@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161125235944) do
+ActiveRecord::Schema.define(version: 20161128060047) do
 
   create_table "activities", force: :cascade do |t|
     t.string   "trackable_type"
@@ -108,7 +108,7 @@ ActiveRecord::Schema.define(version: 20161125235944) do
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["username"], name: "index_users_on_username", unique: true
+    t.index ["username"], name: "index_users_on_username"
   end
 
   create_table "votes", force: :cascade do |t|
