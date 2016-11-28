@@ -84,6 +84,26 @@ class Question < ApplicationRecord
     end .compact
   end
 
+  def self.search(query)
+    __elasticsearch__.search(
+        {
+            query: {
+                multi_match: {
+                    query: query,
+                    fields: ['body']
+                }
+            },
+            highlight: {
+                pre_tags: ['<em>'],
+                post_tags: ['</em>'],
+                fields: {
+                    body: {}
+                }
+            }
+        }
+    )
+  end
+
   private
 
 

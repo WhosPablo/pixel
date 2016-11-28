@@ -9,13 +9,4 @@
 <% end %>
 
 
-
-<ul>
-  <% @questions.each do |question| %>
-      <li>
-        <h3>
-          <%= link_to question.body, controller: "questions", action: "show", id: question._id%>
-        </h3>
-      </li>
-  <% end %>
-</ul>
+<%= render 'questions/question_list', questions: @questions %>
