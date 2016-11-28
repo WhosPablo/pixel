@@ -20,7 +20,7 @@ class UsersController < ApplicationController
   end
 
   def notifications
-    @activities = Public@user.activities.all.order(created_at: :desc)
+    @activities = @user.activities.order(created_at: :desc)
   end
 
   def clear_notifications
