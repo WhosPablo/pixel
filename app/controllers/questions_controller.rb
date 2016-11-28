@@ -63,6 +63,7 @@ class QuestionsController < ApplicationController
   # DELETE /questions/1
   # DELETE /questions/1.json
   def destroy
+    @question.recipients.delete_all
     @question.destroy
     respond_to do |format|
       format.html { redirect_to root_path, notice: 'Question was successfully deleted.' }

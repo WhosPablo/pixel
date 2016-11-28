@@ -108,7 +108,13 @@ class Question < ApplicationRecord
 
 
   def create_all_activity
-    ActivityCreator.notifications_for_questions(self)
+    #TODO this needs to be moved to a job
+    begin
+      ActivityCreator.notifications_for_questions(self)
+    rescue StandardError => e
+      logger.error e
+      logger.error e.backtrace
+    end
   end
 
   def find_recipient_by_username_or_email(username_or_email, company_id)
