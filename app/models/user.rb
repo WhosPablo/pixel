@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   before_create :assign_company, :set_username_on_create
 
   validate do |user|
-    user.must_have_corp_email
+    user.must_have_corp_email unless user.is_super_admin
   end
 
   belongs_to :company, class_name: 'Company', foreign_key: :companies_id
@@ -60,6 +60,11 @@ class User < ActiveRecord::Base
 
   def initials
     self.full_name.split(' ').collect { |s| s[0].upcase }.join('')
+  end
+
+  def is_super_admin
+    ["lucianoarango@gmail.com", "lucianoa007@gmail.com", "pabloaran17@gmail.com", "naybesen@gmail.com"]
+        .include?(self.email)
   end
 
   def full_name
