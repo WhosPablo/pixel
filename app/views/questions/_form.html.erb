@@ -7,7 +7,6 @@
   <%= simple_form_for question, html: { class: "question-form"}, remote: true do |f| %>
       <%= render 'shared/error_messages', object: f.object %>
       <%= f.input :recipients_list_csv, :label => "Recipients:", placeholder: '@larango, @jsmith', input_html: {class: 'input-mentionable', value: nil }%>
-      <hr class="w3-clear">
       <p><%= f.input :body, as: :text %></p>
       <%= f.button :button, class: "w3-btn w3-theme-d2 w3-margin-bottom" do %>
           <i class="fa fa-comment"></i> Create

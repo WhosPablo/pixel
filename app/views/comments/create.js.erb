@@ -1,2 +1,2 @@
-$("#<%= @commentable_type.downcase %>-<%= @commentable.id %> .comments").prepend("<%=j render(@comment) %>");
+$("#<%= @commentable_type.downcase %>-<%= @commentable.id %> .comments").append("<%=j render(@comment) %>");
 $("#<%= @commentable_type.downcase %>-<%= @commentable.id %>-new-comment .comment-form-text ").val("");

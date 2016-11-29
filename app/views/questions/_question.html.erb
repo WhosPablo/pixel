@@ -14,7 +14,6 @@
       <% question.recipients.each do |recipient| %>
             <%= link_to recipient.username, user_path(recipient)%>,
       <% end %></h6><br>
-    <hr class="w3-clear">
     <p><%= question.body %></p>
     <div class="pull-right">
       <% if belongs_to_user?(question) %>
