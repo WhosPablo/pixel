@@ -6,6 +6,6 @@ class AddCompanyTable < ActiveRecord::Migration[5.0]
       t.timestamps
     end
     add_index :companies, :domain, unique: true
-    add_reference :users, :company, index: true, foreign_key: true
+    add_reference :users, :companies, index: true, foreign_key: true
   end
 end
