@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
       User.find_or_create_by(email: user_info[:email].downcase) do |new_user_obj|
         new_user_obj.is_ghost_user = true
         new_user_obj.password = Devise.friendly_token[0,20]
-        new_user_obj.skip_confirmation!
+        new_user_obj.confirmed_at = DateTime.now
         new_user_obj.save!
       end
     end
@@ -45,7 +45,8 @@ class User < ActiveRecord::Base
             first_name: data["first_name"],
             last_name: data["last_name"],
             email: data["email"],
-            password: Devise.friendly_token[0,20]
+            password: Devise.friendly_token[0,20],
+            confirmed_at: DateTime.now
         )
         user.skip_confirmation!
     end
