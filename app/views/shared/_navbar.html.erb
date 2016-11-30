@@ -1,27 +1,32 @@
-<nav class="navbar navbar-default navbar-fixed-top">
-  <div class="container">
+<div class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-top">
-        <span class="sr-only">Toggle navigation</span>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
       <%= link_to "Quiki", root_url, class: "navbar-brand" %>
     </div>
-    <div class="collapse navbar-collapse" id="navbar-top">
-      <ul class="nav navbar-nav navbar-right">
+    <div class="navbar-collapse collapse navbar-responsive-collapse">
+      <ul class="nav navbar-nav">
         <% if user_signed_in? %>
-            <%= render "shared/search_bar" %>
             <li><%= link_to "User Settings", edit_user_registration_path %></li>
             <li><%= link_to(current_user.username, root_path) %></li>
+        <% end %>
+      </ul>
+        <% if user_signed_in? %>
+            <%= render "shared/search_bar" %>
+        <% end %>
+      <ul class="nav navbar-nav navbar-right">
+        <% if user_signed_in? %>
             <%= render "shared/notifications" %>
             <li><%= link_to "Log out", users_sign_out_path, :method => :delete %></li>
-      <% else %>
+        <% else %>
             <li><%= link_to 'Log in', user_session_path %></li>
-            <li><%= link_to 'Sign Up', new_user_registration_path %></li>
-      <% end %>
+          <li><%= link_to 'Sign Up', new_user_registration_path %></li>
+        <% end %>
       </ul>
     </div>
   </div>
-</nav>
+</div>
