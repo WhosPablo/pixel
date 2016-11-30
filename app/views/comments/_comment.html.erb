@@ -2,13 +2,19 @@
   <div class="initials-container w3-left w3-circle w3-margin-right">
     <div class="initials"><%= comment.user.initials %></div>
   </div>
-  <span class="w3-right w3-opacity"><%= time_ago_in_words(comment.created_at) %> ago
-    <% if belongs_to_user?(comment) %>
-        <%= link_to comment_path(comment), method: :delete, class: 'btn btn-danger btn-sm', remote: true do %>
-            <% fa_icon 'trash' %>
+  <div class="comment-info">
+     <span class="w3-opacity">
+          <%= link_to "@#{comment.user.username}", user_path(comment.user)%>
+    </span>
+      <span class="comment-settings w3-opacity">
+          <%= time_ago_in_words(comment.created_at) %> ago
+        <% if belongs_to_user?(comment) %>
+          <%= link_to comment_path(comment), method: :delete, class: 'btn btn-danger btn-sm', remote: true do %>
+              <% fa_icon 'trash' %>
+          <% end %>
         <% end %>
-    <% end %>
-  </span>
-  <h6><%= comment.user.username %></h6>
+      </span>
+  </div>
+
   <p class="comment-text"><%= comment.comment %></p>
 </div>
