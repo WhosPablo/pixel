@@ -1,5 +1,5 @@
-<li class="dropdown">
-  <a href="bootstrap-elements.html" data-target="#" class="dropdown-toggle" data-toggle="dropdown">
+<li id="notifications-button" class="dropdown">
+  <a id="notifications-link" href="bootstrap-elements.html" data-target="#" class="dropdown-toggle" data-toggle="dropdown" data-userid="<%= current_user.id %>" >
     Notifications <span class="notifications-count">
       <%= "(#{@fresh_activities.count})" if @fresh_activities and @fresh_activities.count > 0 %>
       </span>
