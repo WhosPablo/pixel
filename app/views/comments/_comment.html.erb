@@ -1,10 +1,14 @@
-<div class="w3-container w3-card-2 w3-white comment" id="comment-<%= comment.id %>"><br>
+<div class="w3-container w3-light-gray comment" id="comment-<%= comment.id %>"><br>
+  <div class="initials-container w3-left w3-circle w3-margin-right">
+    <div class="initials"><%= comment.user.initials %></div>
+  </div>
   <span class="w3-right w3-opacity"><%= time_ago_in_words(comment.created_at) %> ago
     <% if belongs_to_user?(comment) %>
         <%= link_to comment_path(comment), method: :delete, class: 'btn btn-danger btn-sm', remote: true do %>
             <% fa_icon 'trash' %>
         <% end %>
-    <% end %></span>
-  <h5><%= comment.user.username %></h5>
+    <% end %>
+  </span>
+  <h6><%= comment.user.username %></h6>
   <p class="comment-text"><%= comment.comment %></p>
 </div>

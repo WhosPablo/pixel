@@ -1,6 +1,7 @@
-<h1>Editing Question</h1>
+<h1>Edit the Question</h1>
+<div class="btn-group btn-group-justified btn-group-raised">
+  <%= link_to 'Show', @question, class: "btn" %>
+  <%= link_to 'Back', questions_path, class: "btn" %>
+</div>
+<%= render 'form', question: @question, type: "update" %>
 
-<%= render 'form', question: @question %>
-
-<%= link_to 'Show', @question %> |
-<%= link_to 'Back', questions_path %>

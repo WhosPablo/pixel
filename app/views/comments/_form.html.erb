@@ -1,15 +1,18 @@
-<div class="w3-container w3-card-2 w3-white comment"><br>
+<div class="w3-container w3-light-gray comment"><br>
+  <div class="initials-container w3-left w3-circle w3-margin-right">
+    <div class="initials"><%= current_user.initials %></div>
+  </div>
   <h5><%= current_user.username %></h5>
     <%= form_tag comments_path(commentable_type: commentable.class.to_s, commentable_id: commentable.id),
                  id: "#{commentable.class.to_s.downcase}-#{commentable.id}-new-comment", method: :post,
                  class:"mdl-textfield mdl-js-textfield", remote: true do %>
 
       <div class="form-group">
-        <%= text_area_tag :comment_text, nil, placeholder: 'Enter a response', class: 'form-control input-mentionable mdl-textfield__input comment-form-text' %>
+        <%= text_area_tag :comment_text, nil, placeholder: 'Enter a response', class: 'form-control mdl-textfield__input comment-form-text' %>
       </div>
 
-      <%= button_tag(type: 'submit', class: "w3-btn w3-theme-d2 w3-margin-bottom") do %>
-              <i class="fa fa-comment"></i> Send response
+      <%= button_tag(type: 'submit', class: "w3-btn w3-theme-d2 w3-margin-bottom w3-right") do %>
+          Send response <i class="fa fa-comment"></i>
       <% end %>
     <% end %>
 </div>

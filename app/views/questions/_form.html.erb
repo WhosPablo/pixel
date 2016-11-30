@@ -1,15 +1,21 @@
 <div id="mentionable-data" data-content="<%= mentionable_user_path(current_user)%>"></div>
-<div class="w3-container w3-card-2 w3-white w3-round question"><br>
+<div class="w3-container w3-card-2 <%=
+        if type.eql? "update"
+          "w3-white"
+        else
+          "w3-light-gray"
+        end
+%> w3-round question"><br>
   <div class="initials-container w3-left w3-circle w3-margin-right">
     <div class="initials"><%= current_user.initials %></div>
   </div>
-  <h4>New Question</h4><br>
+  <h4><%= type.titleize %> Question</h4><br>
   <%= simple_form_for question, html: { class: "question-form"}, remote: true do |f| %>
       <%= render 'shared/error_messages', object: f.object %>
       <%= f.input :recipients_list_csv, :label => "Recipients:", placeholder: '@larango, @jsmith', input_html: {class: 'input-mentionable', value: nil }%>
-      <p><%= f.input :body, as: :text %></p>
+      <p><%= f.input :body, :label => "Quick question", as: :text %></p>
       <%= f.button :button, class: "w3-btn w3-theme-d2 w3-margin-bottom" do %>
-          <i class="fa fa-comment"></i> Create
+          <%= type.titleize %>  <i class="fa fa-plus"></i>
       <% end %>
   <% end %>
 </div>

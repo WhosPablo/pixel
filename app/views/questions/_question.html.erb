@@ -1,13 +1,21 @@
-
-  <div class="w3-container w3-card-2 w3-white w3-round question col-md-12"><br>
+  <div id="question-<%= question.id %>" class="w3-container w3-card-2 w3-white w3-round col-md-12 question">
+    <br>
     <% unless question.headless %>
       <div class="initials-container w3-left w3-circle w3-margin-right">
-        <div class="initials"><%= question.user.initials %></div>
+        <div class="initials"><%=
+          unless question.headless
+                question.user.initials
+            else
+              "HL"
+            end
+          %><br></div>
       </div>
     <% end %>
     <span class="w3-right w3-opacity"><%= time_ago_in_words(question.created_at) %> ago</span>
     <% unless question.headless %>
-      <h4><%= question.user.full_name.titleize %></h4><br>
+        <%= link_to user_path(question.user) do %>
+            <h4><%= question.user.full_name.titleize %></h4><br>
+        <% end %>
     <% end %>
 
     <h6>Recipients:
@@ -15,15 +23,32 @@
             <%= link_to recipient.username, user_path(recipient)%>,
       <% end %></h6><br>
     <p><%= question.body %></p>
+    <div class="row">
+
     <div class="pull-right">
       <% if belongs_to_user?(question) %>
           <%= link_to edit_question_path(question), class: 'btn btn-primary btn-sm' do %>
               <% fa_icon 'pencil' %>
           <% end %>
-          <%= link_to question_path(question), method: :delete, class:'btn btn-danger btn-sm', remote: true do %>
+          <%= link_to question_path(question), method: :delete, class:'btn btn-danger btn-sm',
+                      remote: true do %>
               <% fa_icon 'trash' %>
           <% end %>
       <% end %>
     </div>
-    <%= render 'shared/actions', resource: question %>
+    <div class="comments-count">
+      <a class="btn btn-primary show-comments-link" data-target="comments-section">
+        <%= question.comments.count %> answers
+        <b class="caret"></b>
+      </a>
+    </div>
+    </div>
+    <div class="w3-margin-bottom comments-section slide-hide">
+      <div class="comments">
+        <%= render question.comments %>
+      </div>
+      <div class="comments-form">
+        <%= render 'comments/form', commentable: question %>
+      </div>
+    </div>
   </div>

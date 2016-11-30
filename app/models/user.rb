@@ -98,7 +98,7 @@ class User < ActiveRecord::Base
       self.is_ghost_user = false
       self.confirmed_at = nil
       self.send_confirmation_instructions
-      #set_username_on_create #TODO bug where it will always find itself as a user before we can address this
+      set_username_on_create
       self.save!
       self
     end
@@ -127,16 +127,16 @@ class User < ActiveRecord::Base
   def set_username_on_create
     if self.first_name and self.last_name
       company = Company.find_by_domain(self.email.split("@").second)
-      same_name_users = User.where(first_name: self.first_name.downcase, last_name: self.last_name.downcase, companies_id:
-          company.id)
+      user_exists_with_name = User.where(first_name: self.first_name.downcase, last_name: self.last_name.downcase, companies_id:
+          company.id).first
       last_name_no_spaces = self.last_name.split(' ').join
-      if same_name_users and same_name_users.count > 0
+      if user_exists_with_name.blank? or user_exists_with_name == self
         self.username = "#{self.first_name.downcase}.#{last_name_no_spaces.downcase}.#{same_name_users.count.to_s.rjust(2, '0')}"
       else
         self.username = "#{self.first_name.downcase}.#{last_name_no_spaces.downcase}"
       end
     else
-      self.username = self.email.downcase
+      self.username = self.email.split("@").first.downcase
     end
   end
 
