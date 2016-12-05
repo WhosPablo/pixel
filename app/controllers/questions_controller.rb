@@ -1,8 +1,9 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_question, only: [:show, :edit, :update, :destroy]
+  before_action :require_ownership, except: [:show]
+  before_action :check_permission, only: [:show]
   before_action :set_headlessness, only: [:show]
-  before_action :require_ownership, only: [:edit, :update, :destroy]
 
   # GET /questions
   # GET /questions.json
@@ -95,6 +96,12 @@ class QuestionsController < ApplicationController
         redirect_to question_path, :alert => 'Unauthorized'
       end
     end
+
+  def check_permission
+    unless @question.user.company == current_user.company
+      redirect_to root_path, :alert => 'Unauthorized'
+    end
+  end
 
   def send_initial_email_to_recipients_csv(recipients_csv)
     recipients_users = @question.recipients_csv_to_user_obj(recipients_csv, current_user)

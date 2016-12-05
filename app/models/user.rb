@@ -127,13 +127,13 @@ class User < ActiveRecord::Base
   def set_username_on_create
     if self.first_name and self.last_name
       company = Company.find_by_domain(self.email.split("@").second)
-      user_exists_with_name = User.where(first_name: self.first_name.downcase, last_name: self.last_name.downcase, companies_id:
-          company.id).first
+      users_with_same_name = User.where(first_name: self.first_name.downcase, last_name: self.last_name.downcase, companies_id:
+          company.id)
       last_name_no_spaces = self.last_name.split(' ').join
-      if user_exists_with_name.blank? or user_exists_with_name == self
-        self.username = "#{self.first_name.downcase}.#{last_name_no_spaces.downcase}.#{same_name_users.count.to_s.rjust(2, '0')}"
-      else
+      if users_with_same_name.count == 0 or (users_with_same_name.count == 1 and users_with_same_name.first == self)
         self.username = "#{self.first_name.downcase}.#{last_name_no_spaces.downcase}"
+      else
+        self.username = "#{self.first_name.downcase}.#{last_name_no_spaces.downcase}.#{users_with_same_name.count.to_s.rjust(2, '0')}"
       end
     else
       self.username = self.email.split("@").first.downcase

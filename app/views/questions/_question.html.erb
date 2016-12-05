@@ -1,7 +1,7 @@
   <div id="question-<%= question.id %>" class="w3-container w3-card-2 w3-white w3-round col-md-12 question">
     <br>
     <% unless question.headless %>
-      <div class="initials-container w3-left w3-circle w3-margin-right">
+      <div class="initials-container w3-left w3-circle">
         <div class="initials"><%=
           unless question.headless
                 question.user.initials
@@ -11,30 +11,26 @@
           %><br></div>
       </div>
     <% end %>
-    <span class="w3-right w3-opacity"><%= time_ago_in_words(question.created_at) %> ago</span>
-    <% unless question.headless %>
-        <%= link_to user_path(question.user) do %>
-            <h4><%= question.user.full_name.titleize %></h4><br>
-        <% end %>
-    <% end %>
+    <span class="w3-right w3-opacity">
+      <i class="material-icons q-menu">more_vert</i>
+    </span>
+    <div class="content question-body">
+      <h6 class="owner-name">
+      <% unless question.headless %>
+          <%= link_to user_path(question.user) do %>
+              <%= question.user.full_name.titleize %>
+          <% end %>
+      <% end %>
+      <span class="w3-opacity time-ago"> <%= time_ago_in_words(question.created_at) %></span></h6>
 
-    <h6>Recipients:
-      <% question.recipients.each do |recipient| %>
-            <%= link_to recipient.username, user_path(recipient)%>,
-      <% end %></h6><br>
-    <p><%= question.body %></p>
+      <h8><% question.recipients.each do |recipient| %>
+              <%= link_to "@#{recipient.username}", user_path(recipient)%>,
+        <% end %></h8>
+      <p class="text"><%= question.body %></p>
+    </div>
     <div class="row">
 
     <div class="pull-right">
-      <% if belongs_to_user?(question) %>
-          <%= link_to edit_question_path(question), class: 'btn btn-primary btn-sm' do %>
-              <% fa_icon 'pencil' %>
-          <% end %>
-          <%= link_to question_path(question), method: :delete, class:'btn btn-danger btn-sm',
-                      remote: true do %>
-              <% fa_icon 'trash' %>
-          <% end %>
-      <% end %>
     </div>
     <div class="comments-count">
       <a class="btn btn-primary show-comments-link" data-target="comments-section">
