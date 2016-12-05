@@ -1,11 +1,13 @@
 <h1>Question Search</h1>
 
 <%= form_for search_path, method: :get do |f| %>
-    <p>
-      <%= f.label "Search for" %>
-      <%= text_field_tag :q, params[:q] %>
-      <%= submit_tag "Go", name: nil %>
-    </p>
+    <div class="form-group">
+      <%= f.label "Search for", class: "control-label col-sm-2 search-label" %>
+      <div class="col-sm-10">
+        <%= text_field_tag :q, params[:q], class:"form-control" %>
+        <span class="help-block">This is a hint</span>
+      </div>
+    </div>
 <% end %>
 
 
