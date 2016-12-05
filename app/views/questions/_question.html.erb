@@ -11,8 +11,20 @@
           %><br></div>
       </div>
     <% end %>
-    <span class="w3-right w3-opacity">
-      <i class="material-icons q-menu">more_vert</i>
+    <span class="w3-right">
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <i class="material-icons q-menu">more_vert</i>
+        </button>
+        <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1">
+          <li><a href="javaScript:void(0);" onclick="$('#question-<%= question.id %> .comments-section').show()">Answer</a></li>
+          <% if belongs_to_user?(question) %>
+              <li><%= link_to "Edit", edit_question_path(question) %></li>
+              <li><%= link_to "Delete", question_path(question), method: :delete, class:'danger',
+                              remote: true %></li>
+              <% end %>
+        </ul>
+      </div>
     </span>
     <div class="content question-body">
       <h6 class="owner-name">
@@ -43,7 +55,7 @@
       <div class="comments">
         <%= render question.comments %>
       </div>
-      <div class="comments-form">
+      <div id="question-<%= question.id %>-answer" class="comments-form">
         <%= render 'comments/form', commentable: question %>
       </div>
     </div>

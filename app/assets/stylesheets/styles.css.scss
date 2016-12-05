@@ -4,7 +4,7 @@
 body {
   padding-top: 100px;
   background : $bg-color;
-  font-family: 'Noto Sans', sans-serif;
+  font-family: 'Avenir', sans-serif;
 }
 
 h1,
@@ -13,7 +13,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Avenir', sans-serif;
 }
 
 .navbar {
@@ -55,3 +55,15 @@ h6 {
   display: block;
 }
 
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  #searchbar {
+    width: 425px;
+  }
+}
+
+@media (min-width: 1200px) {
+  #searchbar {
+    width: 625px;
+  }
+}
