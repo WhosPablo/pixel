@@ -98,7 +98,7 @@ class QuestionsController < ApplicationController
     end
 
   def check_permission
-    unless @question.user.company == current_user.company
+    unless @question.company == current_user.company
       redirect_to root_path, :alert => 'Unauthorized'
     end
   end
@@ -109,9 +109,11 @@ class QuestionsController < ApplicationController
       UserMailer.question_recipient_email(recipient, @question).deliver_now
     end
   end
-    def send_initial_email_to_all_recipients
-      @question.recipients.each do | recipient |
-        UserMailer.question_recipient_email(recipient, @question).deliver_now
-      end
+
+  def send_initial_email_to_all_recipients
+    @question.recipients.each do | recipient |
+      UserMailer.question_recipient_email(recipient, @question).deliver_now
     end
+  end
+
 end

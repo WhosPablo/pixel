@@ -9,15 +9,18 @@ class Question < ApplicationRecord
 
   # Associations
   belongs_to :user
+  belongs_to :company, class_name: 'Company', foreign_key: :companies_id
   has_many :question_recipients
   has_many :recipients, through: :question_recipients, source: :user
 
   #Settings
   acts_as_commentable
   default_scope -> { order('created_at DESC') }
+
   settings index: { number_of_shards: 1 } do
     mappings dynamic: 'false' do
       indexes :body, analyzer: 'english'
+      indexes :companies_id, type: 'long'
     end
   end
 
@@ -25,10 +28,14 @@ class Question < ApplicationRecord
 
   #Validations
   after_create :create_all_activity
+  before_validation :assign_company
   before_validation :convert_recipients
+
   validate do |question|
     question.recipients_are_inside_company
   end
+
+  validates_presence_of :body
 
   # Additional attributes
   attr_accessor :headless
@@ -46,7 +53,7 @@ class Question < ApplicationRecord
 
   def recipients_are_inside_company
     self.question_recipients.each do | recipient |
-      if self.user.company != recipient.user.company
+      if self.company != recipient.user.company
         errors.add(:base, "You can only ask people from your company and #{recipient.user.username} is not in your company")
       end
     end
@@ -84,13 +91,22 @@ class Question < ApplicationRecord
     end .compact
   end
 
-  def self.search(query)
+  def self.search(query, viewer)
     __elasticsearch__.search(
         {
             query: {
-                multi_match: {
-                    query: query,
-                    fields: ['body']
+                bool: {
+                    must: {
+                      multi_match: {
+                        query:  query,
+                        fields: ['body']
+                      }
+                    },
+                    filter: {
+                        term: {
+                            companies_id: viewer.company.id
+                        }
+                    }
                 }
             },
             highlight: {
@@ -106,6 +122,9 @@ class Question < ApplicationRecord
 
   private
 
+  def assign_company
+    self.company = self.user.company
+  end
 
   def create_all_activity
     #TODO this needs to be moved to a job
@@ -115,10 +134,6 @@ class Question < ApplicationRecord
       logger.error e
       logger.error e.backtrace
     end
-  end
-
-  def find_recipient_by_username_or_email(username_or_email, company_id)
-    User.where('(username = ? AND companies_id = ?) OR email = ?', username_or_email, company_id, username_or_email).first
   end
 
   def create_ghost_user_from_recipient(recipient_username_or_email, default_user)
@@ -131,4 +146,9 @@ class Question < ApplicationRecord
     end
   end
 
+  def find_recipient_by_username_or_email(username_or_email, company_id)
+    User.where('(username = ? AND companies_id = ?) OR email = ?', username_or_email, company_id, username_or_email).first
+  end
+
 end
+

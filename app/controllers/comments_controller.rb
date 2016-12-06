@@ -8,7 +8,16 @@ class CommentsController < ApplicationController
       comment.comment = params[:comment_text]
       comment.user = current_user
     end
-    @comment.save!
+
+    respond_to do |format|
+      if @comment.save
+        format.js
+      else
+        @messages = @comment.errors.full_messages
+        format.js { render :error, status: :unprocessable_entity }
+      end
+    end
+    
   end
 
   def destroy

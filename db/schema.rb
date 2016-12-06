@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161128060047) do
+ActiveRecord::Schema.define(version: 20161206041555) do
 
   create_table "activities", force: :cascade do |t|
     t.string   "trackable_type"
@@ -75,8 +75,10 @@ ActiveRecord::Schema.define(version: 20161128060047) do
     t.string   "title"
     t.string   "body"
     t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.integer  "companies_id"
+    t.index ["companies_id"], name: "index_questions_on_companies_id"
     t.index ["user_id"], name: "index_questions_on_user_id"
   end
 

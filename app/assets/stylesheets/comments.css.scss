@@ -14,10 +14,7 @@
       font-size: $default-font-size;
     }
   }
-  textarea {
-    width: 100%;
-    height: auto;
-  }
+
   .comment-text {
     margin: 14px;
   }
@@ -28,5 +25,12 @@
     right: 2vw;
     position: absolute;
 
+  }
+  .form-group {
+    margin-top: 0px;
+  }
+  textarea {
+    width: 100%;
+    height: auto;
   }
 }

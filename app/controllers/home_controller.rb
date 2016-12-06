@@ -1,9 +1,19 @@
 class HomeController < ApplicationController
+  before_action :authenticate_user!
 
   def index
     @new_question = Question.new
-    #TODO change waiting on https://github.com/rails/rails/issues/24055
-    @questions = Question.left_outer_joins(:question_recipients).distinct.where('question_recipients.user_id = ? OR questions.user_id = ?',
-                                                                       current_user.id, current_user.id).first(15)
+    @questions = Question.where(companies_id: current_user.company).first(10)
+                     .map { | question | QuestionHelper.set_headlessness(question, current_user) }
+  end
+
+
+  private
+
+  def set_headlessness
+    unless self.is_recipient current_user or self.belongs_to current_user
+      @question.headless = true
+      @question.user = nil # To avoid a programming error causing a leak of information
+    end
   end
 end

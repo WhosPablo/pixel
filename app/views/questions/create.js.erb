@@ -1,2 +1,2 @@
-$(".questions-list").prepend('<div id="question-<%= @question.id %>" class="question"><%=j render(@question) %><div>');
+$(".questions-list").prepend('<%=j render(@question) %>');
 $(".question-form")[0].reset();
