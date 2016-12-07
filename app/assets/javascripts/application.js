@@ -16,9 +16,8 @@
 //= require jquery_ujs
 //= require material
 //= require ripples
-//= require react
-//= require react_ujs
 //= require turbolinks
 //= require_tree .
+
 // Initialize material js
 $.material.init();
