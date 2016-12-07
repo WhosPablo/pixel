@@ -1,16 +1,14 @@
   <div id="question-<%= question.id %>" class="w3-container w3-card-2 w3-white w3-round col-md-12 question">
     <br>
-    <% unless question.headless %>
       <div class="initials-container w3-left w3-circle">
         <div class="initials"><%=
           unless question.headless
                 question.user.initials
             else
-              "HL"
+              "Q"
             end
           %><br></div>
       </div>
-    <% end %>
     <span class="w3-right">
       <div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
