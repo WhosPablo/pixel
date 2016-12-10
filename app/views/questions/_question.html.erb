@@ -36,7 +36,7 @@
       <h8><% question.recipients.each do |recipient| %>
               <%= link_to "@#{recipient.username}", user_path(recipient)%>,
         <% end %></h8>
-      <p class="text"><%= question.body %></p>
+      <p class="text"><%= simple_format(question.body) %></p>
     </div>
     <div class="row">
 

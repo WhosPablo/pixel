@@ -1,8 +1,10 @@
-$(document).on("turbolinks:load", questionListeners);
+$(document).on("turbolinks:load", questionSetup);
 
-function questionListeners() {
+function questionSetup() {
     createMentionableRecipients();
     initializeCommentSlides();
+    $('.question-body').linkify();
+
 }
 
 function createMentionableRecipients(){

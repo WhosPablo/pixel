@@ -17,6 +17,10 @@
 //= require material
 //= require ripples
 //= require turbolinks
+//= require linkify
+//= require linkify-jquery
+//= require url
+
 //= require_tree .
 
 // Initialize material js
