@@ -3,8 +3,9 @@ class ImportDirectoryContactsJob < ApplicationJob
 
   rescue_from(StandardError) do |exception|
     #TODO better error reporting here
-    logger.fatal "ERROR ImportDirectoryContactsJob UNABLE TO IMPORT CONTACTS "
-    logger.fatal exception
+    logger.error "ERROR ImportDirectoryContactsJob UNABLE TO IMPORT CONTACTS "
+    logger.error exception.message
+    logger.error exception.backtrace.join("\n")
     throw exception
   end
 

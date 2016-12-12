@@ -23,9 +23,9 @@ class User < ActiveRecord::Base
   acts_as_followable
 
   #TODO allow for more fields to be passed and have create_ghost_users call this?
-  def self.create_ghost_user(user_info)
+  def self.create_ghost_user_from_email(user_info)
     if user_info[:email]
-      User.find_or_create_by(email: user_info[:email].downcase) do |new_user_obj|
+      User.find_or_create_by(email: user_info[:email].downcase) do | new_user_obj |
         new_user_obj.is_ghost_user = true
         new_user_obj.password = Devise.friendly_token[0,20]
         new_user_obj.confirmed_at = DateTime.now

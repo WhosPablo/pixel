@@ -57,19 +57,22 @@ gem 'acts_as_commentable'
 # Easy forms
 gem 'simple_form'
 
-# Google material design
-#gem 'material_design_lite-rails', '~> 1.2'
-
+# Keep track of changes to models
 gem 'public_activity'
+
+# Make http requests easily
+gem 'httparty'
 
 gem 'thor', '0.19.1'
 
-
-# search
+# Search
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
 gem 'bonsai-elasticsearch-rails'
 
+# Slack Bot
+gem 'slack-ruby-bot'
+gem 'celluloid-io'
 
 group :development do
   gem 'better_errors'

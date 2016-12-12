@@ -29,6 +29,8 @@ Rails.application.routes.draw do
   end
 
   get 'search', to: 'search#search'
+  post 'commands', to: 'slack_commands#create'
+
   root :to => 'home#front_page'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

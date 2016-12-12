@@ -2,6 +2,9 @@ class HomeController < ApplicationController
   before_action :authenticate_user!
 
   def index
+    if params.has_key?(:code)
+      SlackTeamRegister.register_code(params[:code])
+    end
     @new_question = Question.new
     @questions = Question.where(companies_id: current_user.company).first(10)
                      .map { | question | QuestionHelper.set_headlessness(question, current_user) }

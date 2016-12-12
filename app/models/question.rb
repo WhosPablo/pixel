@@ -13,7 +13,7 @@ class Question < ApplicationRecord
   has_many :question_recipients
   has_many :recipients, through: :question_recipients, source: :user
 
-  #Settings
+  # Settings
   acts_as_commentable
   default_scope -> { order('created_at DESC') }
 
@@ -26,7 +26,7 @@ class Question < ApplicationRecord
 
   tracked only: [:create], owner: proc { |_controller, model| model.user } #, recipient: proc { |_controller, model| model.recipients }
 
-  #Validations
+  # Validations
   after_create :create_all_activity
   before_validation :assign_company
   before_validation :convert_recipients
@@ -139,7 +139,7 @@ class Question < ApplicationRecord
   def create_ghost_user_from_recipient(recipient_username_or_email, default_user)
     #TODO add email checks instead before trying to create a user?
     begin
-      User.create_ghost_user(email: recipient_username_or_email.downcase)
+      User.create_ghost_user_from_email(email: recipient_username_or_email.downcase)
     rescue ActiveRecord::RecordInvalid => e
       errors.add(:base, e.message + " for ''" + recipient_username_or_email + "''")
       default_user #return yourself as default (should fail validation anyways due to errors )

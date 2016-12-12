@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161206041555) do
+ActiveRecord::Schema.define(version: 20161212021144) do
 
   create_table "activities", force: :cascade do |t|
     t.string   "trackable_type"
@@ -80,6 +80,27 @@ ActiveRecord::Schema.define(version: 20161206041555) do
     t.integer  "companies_id"
     t.index ["companies_id"], name: "index_questions_on_companies_id"
     t.index ["user_id"], name: "index_questions_on_user_id"
+  end
+
+  create_table "slack_question_indices", force: :cascade do |t|
+    t.string   "team_id"
+    t.string   "channel_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "question_id"
+    t.index ["question_id"], name: "index_slack_question_indices_on_question_id"
+  end
+
+  create_table "slack_teams", force: :cascade do |t|
+    t.string   "team_id"
+    t.string   "name"
+    t.string   "domain"
+    t.string   "token"
+    t.boolean  "active",       default: true
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "companies_id"
+    t.index ["companies_id"], name: "index_slack_teams_on_companies_id"
   end
 
   create_table "users", force: :cascade do |t|
