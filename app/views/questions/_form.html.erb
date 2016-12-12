@@ -10,7 +10,7 @@
     <div class="initials"><%= current_user.initials %></div>
   </div>
   <h4><%= type.titleize %> Question</h4><br>
-  <%= simple_form_for question, html: { class: "question-form"}, remote: true do |f| %>
+  <%= simple_form_for question, html: { class: "question-form", autocomplete: "off"}, remote: true do |f| %>
       <%= render 'shared/error_messages', object: f.object %>
       <%= f.input :recipients_list_csv, :label => "Recipients:", placeholder: '@luciano.arango, @jordan.smith', input_html: {class: 'input-mentionable', value: nil }%>
       <p><%= f.input :body, :label => "Quick question", as: :text %></p>
