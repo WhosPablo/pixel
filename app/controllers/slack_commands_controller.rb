@@ -10,7 +10,7 @@ class SlackCommandsController < ApplicationController
   private
 
   def valid_slack_token?
-    params[:token] == "gpuLlJFpqmBXzFOWYaqHjBPU" || params[:token] == "WYM5RHSMVRhweVnkT8oyM70N"
+    ENV['SLACK_VERIFICATION_TOKEN'] == params[:token]
   end
 
   # Only allow a trusted parameter "white list" through.
