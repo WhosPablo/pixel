@@ -4,7 +4,7 @@
       <%= "(#{@fresh_activities.count})" if @fresh_activities and @fresh_activities.count > 0 %>
       </span>
     <b class="caret"></b></a>
-  <ul class="dropdown-menu">
+  <ul class="dropdown-menu notification-menu">
     <% @fresh_activities.each do |activity| %>
         <li>
           <%= render "shared/notification_helper", activity: activity %>

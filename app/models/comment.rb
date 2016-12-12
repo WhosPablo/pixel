@@ -13,7 +13,7 @@ class Comment < ActiveRecord::Base
   acts_as_votable
   tracked only: [:create], owner: proc { |_controller, model| User.find(model.user_id) }
 
-  after_create :create_all_activity
+  after_commit :create_all_activity
   validates_presence_of :comment
   validates_presence_of :commentable
   validates_presence_of :user
@@ -22,6 +22,6 @@ class Comment < ActiveRecord::Base
   private
 
   def create_all_activity
-    ActivityCreator.notifications_for_comments(self)
+    CommentActivityJob.perform_later(self)
   end
 end

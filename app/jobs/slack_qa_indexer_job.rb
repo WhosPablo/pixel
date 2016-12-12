@@ -58,11 +58,10 @@ class SlackQAIndexerJob < ApplicationJob
   end
 
   def create_question_from_slack(creator, params, client)
-    question = Question.new(user: creator, body: params[:text])
+    question = Question.create(user: creator, body: params[:text])
 
     SlackQuestionIndex.create(team_id: params[:team_id], channel_id: params[:channel_id], question: question)
-    question.recipients << attempt_to_find_recipients(client, params[:channel_id], params[:user_id])
-    question.save!
+
     message = {
         text: "Please begin your answer with /a or answer at #{Rails.application.routes.url_helpers.question_url(question,
                                                                                                                  :host => 'quiki.herokuapp.com')}",
@@ -73,6 +72,8 @@ class SlackQAIndexerJob < ApplicationJob
         "Content-Type" => "application/json"
     }})
 
+    question.recipients << attempt_to_find_recipients(client, params[:channel_id], params[:user_id])
+    question.save!
   end
 
   def attempt_to_find_recipients(client, channel_id, creator_id)

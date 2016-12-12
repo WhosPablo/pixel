@@ -27,7 +27,7 @@ class Question < ApplicationRecord
   tracked only: [:create], owner: proc { |_controller, model| model.user } #, recipient: proc { |_controller, model| model.recipients }
 
   # Validations
-  after_create :create_all_activity
+  after_commit :create_all_activity
   before_validation :assign_company
   before_validation :convert_recipients
 
@@ -35,6 +35,7 @@ class Question < ApplicationRecord
     question.recipients_are_inside_company
   end
 
+  validates_presence_of :user
   validates_presence_of :body
 
   # Additional attributes
@@ -127,13 +128,7 @@ class Question < ApplicationRecord
   end
 
   def create_all_activity
-    #TODO this needs to be moved to a job
-    begin
-      ActivityCreator.notifications_for_questions(self)
-    rescue StandardError => e
-      logger.error e
-      logger.error e.backtrace
-    end
+    QuestionActivityJob.perform_later(self)
   end
 
   def create_ghost_user_from_recipient(recipient_username_or_email, default_user)

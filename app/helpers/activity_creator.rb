@@ -13,8 +13,8 @@ class ActivityCreator
     end
   end
 
-  def self.notifications_for_questions(question)
-    question.recipients.each do | recipient |
+  def self.notifications_for_questions(question, recipients)
+    recipients.each do | recipient |
       notify_recipients_of_new_q(question, recipient)
     end
   end
