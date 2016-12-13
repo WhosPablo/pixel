@@ -19,7 +19,11 @@
 //= require turbolinks
 //= require linkify
 //= require linkify-jquery
+//= require autosizer
 //= require_tree .
 
 // Initialize material js
-$.material.init();
+$(document).on("turbolinks:load", function() {
+    $.material.init();
+});
+

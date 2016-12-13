@@ -9,8 +9,10 @@ class QuestionsController < ApplicationController
   # GET /questions.json
   def index
     #TODO change waiting on https://github.com/rails/rails/issues/24055
-    @questions = Question.left_outer_joins(:question_recipients).where('question_recipients.user_id = ? OR questions.user_id = ?',
+    @questions = Question.left_outer_joins(:question_recipients)
+                     .where('question_recipients.user_id = ? OR questions.user_id = ?',
                                                             current_user.id, current_user.id)
+                     .distinct
   end
 
   # GET /questions/1

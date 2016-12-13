@@ -1,5 +1,6 @@
 <%= form_for search_path, method: :get, html: {class: "navbar-form navbar-left", role: "search"}, :url => search_path do |f| %>
     <div class="form-group">
-      <%= text_field_tag :q, params[:q], class: "form-control", id: "searchbar", placeholder: "Search" %>
+      <%= text_field_tag :q, params[:q], class: "form-control", id: "searchbar", placeholder: "" %>
+      <i class="glyphicon glyphicon-search form-control-feedback"></i>
     </div>
 <% end %>

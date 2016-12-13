@@ -4,6 +4,7 @@ function questionSetup() {
     createMentionableRecipients();
     initializeCommentSlides();
     $('.question-body').linkify();
+    autosize($('#question_body'));
 
 }
 
