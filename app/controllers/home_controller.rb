@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: :front_page
 
   def index
     if params.has_key?(:code)
