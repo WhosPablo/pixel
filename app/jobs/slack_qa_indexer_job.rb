@@ -73,8 +73,7 @@ class SlackQAIndexerJob < ApplicationJob
     }})
 
     question.recipients << attempt_to_find_recipients(client, params[:channel_id], params[:user_id])
-    question.save!
-  end
+   end
 
   def attempt_to_find_recipients(client, channel_id, creator_id)
     recipients = []
