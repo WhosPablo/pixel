@@ -1,0 +1,31 @@
+// Place all the styles related to the labels controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+
+.label-box {
+  margin: 15px;
+}
+.label-counts {
+  font-size: 9px;
+  color: #6B706F;
+  letter-spacing: 0.34px;
+}
+
+.labels-list {
+  margin-top: 15px;
+
+  .title {
+    /* Past Labels: */
+    font-size: 18px;
+    color: #6C6C6C;
+    letter-spacing: 0.53px;
+  }
+}
+
+.label-name {
+  font-size: 14px;
+  color: #54C9B7;
+  letter-spacing: 0.53px;
+}

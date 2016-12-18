@@ -1,0 +1,11 @@
+<%= link_to label_path(label) do %>
+  <div class="col-md-3 well well-lg label-box">
+    <span class="label-name">
+      <%= label.name.titlecase %>
+    </span>
+
+    <div class="pull-right label-counts">
+      <%= pluralize(label.questions.count, 'Question')%>
+    </div>
+  </div>
+<% end %>

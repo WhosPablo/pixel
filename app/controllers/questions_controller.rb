@@ -75,6 +75,21 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def auto_labels
+    if params.has_key?(:question_text)
+      text = params[:question_text]
+
+      # Create a parser object
+      tgr = EngTagger.new
+
+      # Get all words from a tagged output
+      #TODO look into how to avoid having to filter words with spaces
+      words = tgr.get_words(text).select{ | word | !word.include? " "}
+
+      render :json => words
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_question
@@ -83,7 +98,7 @@ class QuestionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def question_params
-      params.require(:question).permit(:title, :body, :recipients_list_csv)
+      params.require(:question).permit(:title, :body, :recipients_list_csv, :labels_csv)
     end
 
     def set_headlessness

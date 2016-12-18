@@ -74,6 +74,9 @@ gem 'bonsai-elasticsearch-rails'
 gem 'slack-ruby-bot'
 gem 'celluloid-io'
 
+# Tag part of a sentence
+gem 'engtagger'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'

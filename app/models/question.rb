@@ -12,6 +12,8 @@ class Question < ApplicationRecord
   belongs_to :company, class_name: 'Company', foreign_key: :companies_id
   has_many :question_recipients
   has_many :recipients, through: :question_recipients, source: :user
+  has_and_belongs_to_many :labels, counter_cache: true
+
 
   # Settings
   acts_as_commentable
@@ -30,6 +32,8 @@ class Question < ApplicationRecord
   after_commit :create_all_activity
   before_validation :assign_company
   before_validation :convert_recipients
+  before_validation :convert_labels
+
 
   validate do |question|
     question.recipients_are_inside_company
@@ -41,7 +45,7 @@ class Question < ApplicationRecord
   # Additional attributes
   attr_accessor :headless
   attr_accessor :recipients_csv
-
+  attr_accessor :labels_list
 
 
   def belongs_to(user_to_check)
@@ -52,13 +56,28 @@ class Question < ApplicationRecord
     self.question_recipients.exists?(user_id: user_to_check.id)
   end
 
+  def labels_csv
+    self.labels.map { |t| t.name }.to_sentence
+  end
+
+  def labels_csv=(labels_csv)
+    self.labels_list = labels_csv.split(',')
+  end
+
+  def convert_labels
+    unless self.labels_list.blank?
+      self.labels << self.labels_list.map do | label |
+        Label.find_or_create_by(name: label.downcase, company: self.company)
+      end
+    end
+  end
+
   def recipients_are_inside_company
     self.question_recipients.each do | recipient |
       if self.company != recipient.user.company
         errors.add(:base, "You can only ask people from your company and #{recipient.user.username} is not in your company")
       end
     end
-
   end
 
   def recipients_list_csv
@@ -73,7 +92,6 @@ class Question < ApplicationRecord
     unless self.recipients_csv.blank?
       self.recipients << recipients_csv_to_user_obj(self.recipients_csv, self.user)
     end
-
   end
 
 

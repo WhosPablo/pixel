@@ -118,6 +118,7 @@ GEM
     elasticsearch-transport (5.0.0)
       faraday
       multi_json
+    engtagger (0.2.1)
     erubis (2.7.0)
     excon (0.54.0)
     execjs (2.7.0)
@@ -529,6 +530,7 @@ DEPENDENCIES
   devise
   elasticsearch-model
   elasticsearch-rails
+  engtagger
   fog
   fog-aws
   font-awesome-rails
