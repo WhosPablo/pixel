@@ -2,19 +2,27 @@ class LabelCreator
 
   def self.generate_labels(text)
 
-    # Create a parser object
-    tgr = EngTagger.new
+    if text and text.is_a? String and text.length > 0
 
-    # Downcase letters after punctuation bc they might be interpreted as pronouns
-    text = text.gsub(/(\.|\?|!)\s*([A-Z])+/){ |s| s.downcase }
+      # Create a parser object
+      tgr = EngTagger.new
 
-    # Downcase first letter as its word might be interpreted as a pronoun
-    text = text.gsub(/^\s*\S+\s+/){ |s| s.downcase }
+      # Downcase letters after punctuation bc they might be interpreted as pronouns
+      text = text.gsub(/(\.|\?|!)\s*([A-Z])+/){ |s| s.downcase }
 
-    # Get all words from a tagged output
-    #TODO look into how to avoid having to filter words with spaces
-    words = tgr.get_words(text).select{ | word | !word.include? " "}
-    words
+      # Downcase first letter as its word might be interpreted as a pronoun
+      text = text.gsub(/^\s*\S+\s+/){ |s| s.downcase }
+
+      # Get all words from a tagged output
+      words = tgr.get_words(text)
+
+      #TODO look into how to avoid having to filter words with spaces
+      if words
+        words.select{ | word | !word.include? " "}
+      else
+        ""
+      end
+    end
   end
 end
 

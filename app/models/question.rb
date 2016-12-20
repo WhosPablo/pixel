@@ -48,7 +48,8 @@ class Question < ApplicationRecord
   attr_accessor :labels_list
 
   def auto_populate_labels
-    self.labels_list = LabelCreator.generate_labels(self.body).keys
+    labels = LabelCreator.generate_labels(self.body)
+    self.labels_list = labels.present? ? labels.keys : []
   end
 
   def auto_populate_labels!
