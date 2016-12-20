@@ -51,6 +51,11 @@ class Question < ApplicationRecord
     self.labels_list = LabelCreator.generate_labels(self.body).keys
   end
 
+  def auto_populate_labels!
+   self.auto_populate_labels
+   self.convert_labels
+  end
+
   def belongs_to(user_to_check)
     user_id == user_to_check.id
   end

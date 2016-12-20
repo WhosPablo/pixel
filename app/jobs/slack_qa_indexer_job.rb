@@ -60,7 +60,6 @@ class SlackQAIndexerJob < ApplicationJob
   def create_question_from_slack(creator, params, client)
     question = Question.create(user: creator, body: params[:text])
     SlackQuestionIndex.create(team_id: params[:team_id], channel_id: params[:channel_id], question: question)
-    question.auto_populate_labels
 
     message = {
         text: "Please begin your answer with /a or answer at #{Rails.application.routes.url_helpers.question_url(question,
@@ -72,6 +71,8 @@ class SlackQAIndexerJob < ApplicationJob
         "Content-Type" => "application/json"
     }})
 
+
+    question.auto_populate_labels!
     question.recipients << attempt_to_find_recipients(client, params[:channel_id], params[:user_id])
    end
 
