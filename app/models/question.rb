@@ -47,6 +47,9 @@ class Question < ApplicationRecord
   attr_accessor :recipients_csv
   attr_accessor :labels_list
 
+  def auto_populate_labels
+    self.labels_list = LabelCreator.generate_labels(self.body).keys
+  end
 
   def belongs_to(user_to_check)
     user_id == user_to_check.id
@@ -61,7 +64,7 @@ class Question < ApplicationRecord
   end
 
   def labels_csv=(labels_csv)
-    self.labels_list = labels_csv.split(',')
+    self.labels_list = labels_csv.split(',').map(&:strip)
   end
 
   def convert_labels

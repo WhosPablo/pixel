@@ -77,16 +77,7 @@ class QuestionsController < ApplicationController
 
   def auto_labels
     if params.has_key?(:question_text)
-      text = params[:question_text]
-
-      # Create a parser object
-      tgr = EngTagger.new
-
-      # Get all words from a tagged output
-      #TODO look into how to avoid having to filter words with spaces
-      words = tgr.get_words(text).select{ | word | !word.include? " "}
-
-      render :json => words
+      render :json => LabelCreator.generate_labels(params[:question_text])
     end
   end
 

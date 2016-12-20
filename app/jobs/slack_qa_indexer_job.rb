@@ -46,7 +46,7 @@ class SlackQAIndexerJob < ApplicationJob
     question = SlackQuestionIndex.where(team_id: params[:team_id], channel_id: params[:channel_id]).last.question
 
     question.comments.create(comment: params[:text], user: creator)
-
+    question.auto_populate_labels
     message = {
         text: "Thanks, your answer has been posted on Quiki",
         response_type: "ephemeral"
