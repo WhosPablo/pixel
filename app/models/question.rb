@@ -29,7 +29,7 @@ class Question < ApplicationRecord
   tracked only: [:create], owner: proc { |_controller, model| model.user } #, recipient: proc { |_controller, model| model.recipients }
 
   # Validations
-  after_commit :create_all_activity
+  after_commit :create_all_activity, except: [:destroy]
   before_validation :assign_company
   before_validation :convert_recipients
   before_validation :convert_labels

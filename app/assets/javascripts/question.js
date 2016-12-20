@@ -1,4 +1,8 @@
 $(document).on("turbolinks:load", questionSetup);
+var questionLabels = {
+    'suggested': [],
+    'userCreated': []
+};
 
 function questionSetup() {
     createMentionableRecipients();
@@ -11,7 +15,14 @@ function questionSetup() {
 }
 
 function addLabelListeners() {
-   // $("#question_labels_csv")
+    $("#question_labels_csv").keyup(function(){
+        if ($('#question_labels_csv').val()) {
+            currentLabels = $('#question_labels_csv').val().split(/[\s,]+/);
+            questionLabels.userCreated = currentLabels
+                .filter(function(x) { return questionLabels.suggested.indexOf(x) < 0 });
+
+        }
+    });
 }
 
 function createMentionableRecipients(){
@@ -45,8 +56,8 @@ function createAutoLabels(){
         $.get({
             url: '/auto_labels/?question_text=' + $('#question_body').val(),
             success: function(value) {
-                $("#question_labels_csv").val(Object.keys(value));
-                console.log(value)
+                questionLabels.suggested = Object.keys(value);
+                $("#question_labels_csv").val(questionLabels.suggested.concat(questionLabels.userCreated).join(", "));
             }
         });
     }
