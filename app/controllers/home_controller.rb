@@ -10,7 +10,7 @@ class HomeController < ApplicationController
     @new_question = Question.new
     # @questions = Question.where(companies_id: current_user.company).first(10)
     #                  .map { | question | QuestionHelper.set_headlessness(question, current_user) }
-    @labels = Label.where(companies_id: current_user.company)
+    @labels = Label.where(companies_id: current_user.company).order('name ASC')
   end
 
 

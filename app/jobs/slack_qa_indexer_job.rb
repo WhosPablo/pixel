@@ -46,7 +46,7 @@ class SlackQAIndexerJob < ApplicationJob
     question = SlackQuestionIndex.where(team_id: params[:team_id], channel_id: params[:channel_id]).last.question
 
     question.comments.create(comment: params[:text], user: creator)
-    question.auto_populate_labels
+
     message = {
         text: "Thanks, your answer has been posted on Quiki",
         response_type: "ephemeral"
@@ -59,8 +59,8 @@ class SlackQAIndexerJob < ApplicationJob
 
   def create_question_from_slack(creator, params, client)
     question = Question.create(user: creator, body: params[:text])
-
     SlackQuestionIndex.create(team_id: params[:team_id], channel_id: params[:channel_id], question: question)
+    question.auto_populate_labels
 
     message = {
         text: "Please begin your answer with /a or answer at #{Rails.application.routes.url_helpers.question_url(question,
