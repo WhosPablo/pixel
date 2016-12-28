@@ -13,6 +13,7 @@ class Question < ApplicationRecord
   has_many :recipients, through: :question_recipients, source: :user,  dependent: :destroy
   has_many :labels_questions, dependent: :destroy
   has_many :labels, :through => :labels_questions
+  has_one :slack_question_index, dependent: :destroy
   belongs_to :user
 
 
