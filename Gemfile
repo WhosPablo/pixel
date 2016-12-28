@@ -77,6 +77,10 @@ gem 'celluloid-io'
 # Tag part of a sentence
 gem 'engtagger'
 
+# Pagination
+gem 'will_paginate'
+gem 'bootstrap-will_paginate'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'

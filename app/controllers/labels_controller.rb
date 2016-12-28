@@ -9,7 +9,7 @@ class LabelsController < ApplicationController
   end
 
   def show
-    @questions = @label.questions
+    @questions = @label.questions.paginate(page: params[:page], per_page: 15)
   end
 
   private

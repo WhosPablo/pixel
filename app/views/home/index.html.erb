@@ -1,6 +1,11 @@
 
 <%= render 'questions/form', question: @new_question, type: "create" %>
 <div class="questions-list pre-fill"></div>
+
 <%= render 'labels/labels_list', labels: @labels %>
+<div id="pagination-controls">
+  <%= will_paginate @labels%>
+</div>
+
 
 

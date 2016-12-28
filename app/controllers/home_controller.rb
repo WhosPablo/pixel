@@ -11,7 +11,11 @@ class HomeController < ApplicationController
     @new_question = Question.new
     # @questions = Question.where(companies_id: current_user.company).first(10)
     #                  .map { | question | QuestionHelper.set_headlessness(question, current_user) }
-    @labels = Label.where(companies_id: current_user.company).where("questions_count > ?", 0).order('name ASC')
+    @labels = Label
+                  .paginate(page: params[:page], per_page: 25)
+                  .where(companies_id: current_user.company)
+                  .where("questions_count > ?", 0)
+                  .order('questions_count DESC')
   end
 
 

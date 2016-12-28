@@ -2,3 +2,7 @@
 <h5><%= @user.email %></h5>
 
 <%= render 'questions/question_list', questions: @questions %>
+
+<div id="pagination-controls">
+  <%= will_paginate @questions%>
+</div>

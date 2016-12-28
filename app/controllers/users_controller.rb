@@ -7,8 +7,17 @@ class UsersController < ApplicationController
   respond_to :html, :js
 
   def show
-    @questions = Question.left_outer_joins(:question_recipients).where('(question_recipients.user_id = ? AND questions.user_id = ?)
- OR (question_recipients.user_id = ? AND questions.user_id = ?)', current_user.id, @user.id, @user.id, current_user.id)
+    if @user == current_user
+      redirect_to questions_path
+    else
+      @questions = Question
+                       .paginate(page: params[:page], per_page: 15)
+                       .left_outer_joins(:question_recipients)
+                       .where('(question_recipients.user_id = ? AND questions.user_id = ?)
+OR (question_recipients.user_id = ? AND questions.user_id = ?)',
+                              current_user.id, @user.id, @user.id, current_user.id)
+    end
+
   end
 
   def edit
