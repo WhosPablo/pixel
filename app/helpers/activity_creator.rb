@@ -19,6 +19,13 @@ class ActivityCreator
     end
   end
 
+  def self.hard_notifications_for_questions(question, recipients=nil)
+    if recipients.nil?
+      email_to_all_recipients(question)
+    else
+      email_to_recipients_csv(question, recipients)
+    end
+  end
   private
 
   def self.notify_recipients_of_new_q(question, recipient)
@@ -58,6 +65,19 @@ class ActivityCreator
               locals: { activity: activity }
           )
       )
+    end
+  end
+
+  def self.email_to_recipients_csv(question, recipients_csv)
+    recipients_users = question.recipients_csv_to_user_obj(recipients_csv, question.user)
+    recipients_users.each do | recipient |
+      UserMailer.question_recipient_email(recipient, question).deliver_later
+    end
+  end
+
+  def self.email_to_all_recipients(question)
+    question.recipients.each do | recipient |
+      UserMailer.question_recipient_email(recipient, question).deliver_later
     end
   end
 end

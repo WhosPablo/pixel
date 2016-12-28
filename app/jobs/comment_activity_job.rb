@@ -3,7 +3,7 @@ class CommentActivityJob < ApplicationJob
 
   rescue_from(StandardError) do |exception|
     #TODO better error reporting here
-    logger.error "ERROR unable to notify all users for a question "
+    logger.error "ERROR unable to notify all users for a COMMENT "
     logger.error exception.message
     logger.error exception.backtrace.join("\n")
     throw exception

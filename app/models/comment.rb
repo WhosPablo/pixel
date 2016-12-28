@@ -13,7 +13,7 @@ class Comment < ActiveRecord::Base
   acts_as_votable
   tracked only: [:create], owner: proc { |_controller, model| User.find(model.user_id) }
 
-  after_commit :create_all_activity
+  after_commit :create_all_activity, on: [:create, :update]
   validates_presence_of :comment
   validates_presence_of :commentable
   validates_presence_of :user

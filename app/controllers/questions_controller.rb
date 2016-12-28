@@ -38,7 +38,7 @@ class QuestionsController < ApplicationController
     @question.user = current_user
     respond_to do |format|
       if @question.save
-        send_initial_email_to_all_recipients
+        ActivityCreator.hard_notifications_for_questions(@question)
         format.html { redirect_to @question, notice: 'Question was successfully created.' }
         format.js
       else
@@ -54,7 +54,7 @@ class QuestionsController < ApplicationController
   def update
     respond_to do |format|
       if @question.update(question_params)
-        send_initial_email_to_recipients_csv(question_params[:recipients_list_csv])
+        ActivityCreator.hard_notifications_for_questions(@question, question_params[:recipients_list_csv])
         format.html { redirect_to @question, notice: 'Question was successfully updated.' }
         format.json { render :show, status: :ok, location: @question }
       else
@@ -111,17 +111,5 @@ class QuestionsController < ApplicationController
     end
   end
 
-  def send_initial_email_to_recipients_csv(recipients_csv)
-    recipients_users = @question.recipients_csv_to_user_obj(recipients_csv, current_user)
-    recipients_users.each do | recipient |
-      UserMailer.question_recipient_email(recipient, @question).deliver_now
-    end
-  end
-
-  def send_initial_email_to_all_recipients
-    @question.recipients.each do | recipient |
-      UserMailer.question_recipient_email(recipient, @question).deliver_now
-    end
-  end
 
 end
