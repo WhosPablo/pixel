@@ -13,4 +13,8 @@
       <td><%= render "shared/notification_helper", activity: activity %></td>
     </tr>
   <% end %>
+
 </table>
+<div id="pagination-controls">
+  <%= will_paginate @activities %>
+</div>

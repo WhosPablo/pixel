@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_action :set_user
   before_action :check_permission
   before_action :check_ownership, only: [:edit, :notifications, :clear_notifications]
-  before_action :find_notifications, only: [:show, :edit]
+  before_action :find_notifications, only: [:show, :edit, :notifications]
   respond_to :html, :js
 
   def show
@@ -29,7 +29,8 @@ OR (question_recipients.user_id = ? AND questions.user_id = ?)',
   end
 
   def notifications
-    @activities = @user.activities.order(created_at: :desc)
+    @activities = @user.activities.paginate(page: params[:page], per_page: 20)
+                      .order(created_at: :desc)
   end
 
   def clear_notifications
