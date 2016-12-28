@@ -15,7 +15,7 @@ class HomeController < ApplicationController
                   .paginate(page: params[:page], per_page: 25)
                   .where(companies_id: current_user.company)
                   .where("questions_count > ?", 0)
-                  .order('questions_count DESC')
+                  .order('questions_count DESC, name ASC')
   end
 
 

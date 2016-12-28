@@ -5,7 +5,11 @@ class LabelsController < ApplicationController
   before_action :find_notifications
 
   def index
-    @labels = current_user.company.labels.where("questions_count > ?", 0)
+    @labels = Label
+                  .paginate(page: params[:page], per_page: 25)
+                  .where(companies_id: current_user.company)
+                  .where("questions_count > ?", 0)
+                  .order('questions_count DESC, name ASC')
   end
 
   def show
