@@ -1,4 +1,6 @@
 class SearchController < ApplicationController
+  before_action :find_notifications
+
   def search
     if params[:q].nil?
       @questions = []

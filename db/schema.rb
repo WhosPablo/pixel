@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161218174705) do
+ActiveRecord::Schema.define(version: 20161228031319) do
 
   create_table "activities", force: :cascade do |t|
     t.string   "trackable_type"
@@ -71,7 +71,7 @@ ActiveRecord::Schema.define(version: 20161218174705) do
     t.index ["companies_id"], name: "index_labels_on_companies_id"
   end
 
-  create_table "labels_questions", id: false, force: :cascade do |t|
+  create_table "labels_questions", force: :cascade do |t|
     t.integer "label_id",    null: false
     t.integer "question_id", null: false
     t.index ["label_id", "question_id"], name: "index_labels_questions_on_label_id_and_question_id"

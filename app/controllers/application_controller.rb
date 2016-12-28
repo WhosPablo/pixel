@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_action :find_notifications
 
   #TODO move to ajax call when user clicks on notification button?
   def find_notifications

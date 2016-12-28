@@ -8,11 +8,12 @@ class Question < ApplicationRecord
   include PublicActivity::Model
 
   # Associations
-  belongs_to :user
   belongs_to :company, class_name: 'Company', foreign_key: :companies_id
   has_many :question_recipients
-  has_many :recipients, through: :question_recipients, source: :user
-  has_and_belongs_to_many :labels, counter_cache: true
+  has_many :recipients, through: :question_recipients, source: :user,  dependent: :destroy
+  has_many :labels_questions, dependent: :destroy
+  has_many :labels, :through => :labels_questions
+  belongs_to :user
 
 
   # Settings
@@ -29,7 +30,7 @@ class Question < ApplicationRecord
   tracked only: [:create], owner: proc { |_controller, model| model.user } #, recipient: proc { |_controller, model| model.recipients }
 
   # Validations
-  after_commit :create_all_activity, except: [:destroy]
+  after_commit :create_all_activity, on: [:create, :update]
   before_validation :assign_company
   before_validation :convert_recipients
   before_validation :convert_labels

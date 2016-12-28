@@ -1,5 +1,6 @@
 class HomeController < ApplicationController
   before_action :authenticate_user!, except: :front_page
+  before_action :find_notifications
 
   def index
     #TODO move this out of here
@@ -10,7 +11,7 @@ class HomeController < ApplicationController
     @new_question = Question.new
     # @questions = Question.where(companies_id: current_user.company).first(10)
     #                  .map { | question | QuestionHelper.set_headlessness(question, current_user) }
-    @labels = Label.where(companies_id: current_user.company).order('name ASC')
+    @labels = Label.where(companies_id: current_user.company).where("questions_count > ?", 0).order('name ASC')
   end
 
 

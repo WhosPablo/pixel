@@ -2,9 +2,10 @@ class LabelsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_label, only: [:show]
   before_action :check_permission, only: [:show]
+  before_action :find_notifications
 
   def index
-    @labels = current_user.company.labels
+    @labels = current_user.company.labels.where("questions_count > ?", 0)
   end
 
   def show

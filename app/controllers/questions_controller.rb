@@ -4,6 +4,7 @@ class QuestionsController < ApplicationController
   before_action :require_ownership, only: [:edit, :update, :destroy]
   before_action :check_permission, only: [:show]
   before_action :set_headlessness, only: [:show]
+  before_action :find_notifications, only: [:show, :edit, :index ]
 
   # GET /questions
   # GET /questions.json
@@ -66,8 +67,7 @@ class QuestionsController < ApplicationController
   # DELETE /questions/1
   # DELETE /questions/1.json
   def destroy
-    @question.recipients.delete_all
-    @question.destroy
+    @question.destroy!
     respond_to do |format|
       format.html { redirect_to root_path, notice: 'Question was successfully deleted.' }
       format.json { head :no_content }

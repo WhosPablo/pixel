@@ -41,7 +41,7 @@ function createMentionableRecipients(){
 function createAutoLabels(){
     //setup before functions
     var typingTimer;                //timer identifier
-    var doneTypingInterval = 3000;  //time in ms (3 seconds)
+    var doneTypingInterval = 1000;  //time in ms (1 seconds)
 
     //on keyup, start the countdown
     $('#question_body').keyup(function(){
