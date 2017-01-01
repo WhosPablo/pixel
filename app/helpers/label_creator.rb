@@ -25,7 +25,7 @@ class LabelCreator
       words.select{ | word | word.include? " "}.each do | word |
         split_word = word.first.split(" ")
         if split_word.all? { |e| single_word_nouns.include?(e) }
-          split_word.each { | e | single_word_nouns.delete(e) }
+          # split_word.each { | e | single_word_nouns.delete(e) }
           multiple_words[word.first.singularize] = 1
         end
       end
