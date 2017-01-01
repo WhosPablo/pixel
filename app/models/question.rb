@@ -68,7 +68,7 @@ class Question < ApplicationRecord
   end
 
   def labels_csv
-    self.labels.map { |t| t.name }.to_sentence
+    self.labels.map { |t| t.name }.join(",")
   end
 
   def labels_csv=(labels_csv)
@@ -77,6 +77,7 @@ class Question < ApplicationRecord
 
   def convert_labels
     unless self.labels_list.blank?
+      self.labels.destroy_all
       self.labels << self.labels_list.map do | label |
         Label.find_or_create_by(name: label.downcase, company: self.company)
       end

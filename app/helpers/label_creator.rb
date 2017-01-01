@@ -13,6 +13,9 @@ class LabelCreator
       # Downcase first letter as its word might be interpreted as a pronoun
       text = text.gsub(/^\s*\S+\s+/){ |s| s.downcase }
 
+      # Add spaces to periods in the text
+      text = text.gsub(/\.\s/ , ' . ')
+
       # Get all words from a tagged output
       words = tgr.get_words(text)
 
@@ -23,10 +26,14 @@ class LabelCreator
         split_word = word.first.split(" ")
         if split_word.all? { |e| single_word_nouns.include?(e) }
           split_word.each { | e | single_word_nouns.delete(e) }
-          multiple_words[word.first] = 1
+          multiple_words[word.first.singularize] = 1
         end
       end
-      multiple_words.merge(single_word_nouns)
+
+      single_word_singular = {}
+      single_word_nouns.keys.each { | key | single_word_singular[key.singularize] = 1}
+
+      multiple_words.merge(single_word_singular)
     end
   end
 end
