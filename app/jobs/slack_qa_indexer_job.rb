@@ -21,7 +21,7 @@ class SlackQAIndexerJob < ApplicationJob
     creator = find_user_by_slack_id(client, params[:user_id])
     unless creator
       message = {
-          text: "Looks like you haven't made an account on Quiki, make an account at http://quiki.herokuapp.com",
+          text: "Looks like you haven't made an account on Quiki, make an account at http://www.askquiki..com",
           response_type: "ephemeral"
       }
       HTTParty.post(params[:response_url], { body: message.to_json, headers: {
@@ -63,7 +63,7 @@ class SlackQAIndexerJob < ApplicationJob
 
     message = {
         text: "Please begin your answer with /a or answer at #{Rails.application.routes.url_helpers.question_url(question,
-                                                                                                                 :host => 'quiki.herokuapp.com')}",
+                                                                                                                 :host => 'www.askquiki.com')}",
         response_type: "in_channel"
     }
 
