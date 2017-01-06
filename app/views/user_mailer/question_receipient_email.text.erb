@@ -3,6 +3,6 @@ Hey! <%= @from_name.titleize %> has asked you a question
 
 truncate(@question.body, length: @question.body.length/2)
 
-Click here to answer:  <%= link_to 'Show', @question %>
+Read the rest of the question and answer <%= link_to 'here', @question %> on Quiki
 
 Thanks!

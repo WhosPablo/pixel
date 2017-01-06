@@ -26,8 +26,13 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
+  config.action_mailer.default_options = {
+      :from => "Quiki <questions@q.askquiki.com>"
+  }
+
   # Mailer default for Devise
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
   config.action_mailer.delivery_method = :letter_opener
 
   # Don't care if the mailer can't send.

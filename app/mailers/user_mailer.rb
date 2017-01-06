@@ -1,4 +1,5 @@
 class UserMailer < ApplicationMailer
+  default from: "Quiki <questions@q.askquiki.com>"
 
 
   def question_recipient_email(user, question)
@@ -10,6 +11,6 @@ class UserMailer < ApplicationMailer
     else
       @from_name =  @question.user.username
     end
-    mail(to: @user.email, subject:  @from_name + ' has asked you a question')
+    mail(to: @user.email, subject:  @from_name.titleize + ' has asked you a question')
   end
 end

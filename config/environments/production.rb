@@ -72,9 +72,10 @@ Rails.application.configure do
       :authentication => :plain,
   }
 
-  ActionMailer::Base.default :from => "Quiki <questions@q.askquiki.com>"
+  config.action_mailer.default_options = {
+      :from => "Quiki <questions@q.askquiki.com>"
+  }
 
-  ActionMailer::Base.delivery_method = :smtp
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
