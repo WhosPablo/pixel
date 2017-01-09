@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
 
   resources :labels
+
   resources :questions
+  get 'q/:id' => 'questions#show'
   get 'auto_labels', to: 'questions#auto_labels'
 
   resources :comments, only: [:create, :destroy]
