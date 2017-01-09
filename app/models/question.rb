@@ -151,6 +151,36 @@ class Question < ApplicationRecord
     )
   end
 
+
+  def self.find_relevant_question(query, company)
+    __elasticsearch__.search(
+        {
+            query: {
+                bool: {
+                    must: {
+                        multi_match: {
+                            query:  query,
+                            fields: ['body']
+                        }
+                    },
+                    filter: {
+                        term: {
+                            companies_id: company.id
+                        }
+                    }
+                }
+            },
+            highlight: {
+                pre_tags: ['<em>'],
+                post_tags: ['</em>'],
+                fields: {
+                    body: {}
+                }
+            }
+        }
+    )
+  end
+
   private
 
   def assign_company

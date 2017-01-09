@@ -3,6 +3,8 @@ class SlackTeam < ApplicationRecord
 
   SORT_ORDERS = ['created_at', '-created_at', 'updated_at', '-updated_at'].freeze
 
+  belongs_to :company, class_name: 'Company', foreign_key: :companies_id
+
   attr_accessor :server # server at runtime
 
   scope :active, -> { where(active: true) }

@@ -1,5 +1,6 @@
 class SlackQAIndexerJob < ApplicationJob
   queue_as :default
+  @@num_of_qs = 2
 
   rescue_from(StandardError) do |exception|
     #TODO better error reporting here
@@ -20,24 +21,18 @@ class SlackQAIndexerJob < ApplicationJob
 
     creator = find_user_by_slack_id(client, params[:user_id])
     unless creator
-      message = {
-          text: "Looks like you haven't made an account on Quiki, make an account at http://www.askquiki..com",
-          response_type: "ephemeral"
-      }
-      HTTParty.post(params[:response_url], { body: message.to_json, headers: {
-          "Content-Type" => "application/json"
-      }})
-      raise "Could not find the user object for the creator of a question/answer from Slack"
+      report_missing_quiki_profile(params[:response_url])
+      raise "Could not find the user object for the creator of a question/answer from Slack, User ID: #{params[:user][:id]}"
     end
     case params[:command]
       when "/q"
-        create_question_from_slack(creator, params, client)
+        search_question_from_slack(creator, params, team, client)
       when "/a"
         create_answer_from_slack(creator, params)
       else
         logger.error("Could not find how to process #{params}")
+        raise "Unexpected command #{params}"
     end
-
   end
 
   def create_answer_from_slack(creator, params)
@@ -52,28 +47,45 @@ class SlackQAIndexerJob < ApplicationJob
         response_type: "ephemeral"
     }
 
-    HTTParty.post(params[:response_url], { body: message.to_json, headers: {
+    response = HTTParty.post(params[:response_url], { body: message.to_json, headers: {
         "Content-Type" => "application/json"
     }})
+    logger.info response
   end
 
-  def create_question_from_slack(creator, params, client)
-    question = Question.create(user: creator, body: params[:text])
-    SlackQuestionIndex.create(team_id: params[:team_id], channel_id: params[:channel_id], question: question)
+  def search_question_from_slack(creator, params, team, client)
+    new_question = Question.create(user: creator, body: params[:text])
 
-    message = {
-        text: "Please begin your answer with /a or answer at #{Rails.application.routes.url_helpers.question_url(question,
-                                                                                                                 :host => 'www.askquiki.com')}",
-        response_type: "in_channel"
-    }
+    possible_qs = Question.find_relevant_question(params[:text], team.company)
+                      .records
+                      .first(@@num_of_qs)
 
-    HTTParty.post(params[:response_url], { body: message.to_json, headers: {
+    if possible_qs.count > 0
+      message = {}
+      message[:text] = "Here are some similar previous questions, do they answer your question?"
+      message[:attachments] = []
+
+      possible_qs.each do | question |
+        question_attachment = convert_question_to_attachment(question)
+        message[:attachments].push(question_attachment)
+      end
+
+      message[:attachments].push(are_these_correct_quest(new_question))
+    else
+      message = {
+          text: "Please begin your answer with /a or answer at #{Rails.application.routes.url_helpers.question_url(new_question, :host => 'www.askquiki.com')}",
+          response_type: "in_channel"
+      }
+    end
+
+    logger.info HTTParty.post(params[:response_url], { body: message.to_json, headers: {
         "Content-Type" => "application/json"
     }})
 
-
-    question.auto_populate_labels!
-    question.recipients << attempt_to_find_recipients(client, params[:channel_id], params[:user_id])
+    # Populate question
+    SlackQuestionIndex.create(team_id: params[:team_id], channel_id: params[:channel_id], question: new_question)
+    new_question.auto_populate_labels!
+    new_question.recipients << attempt_to_find_recipients(client, params[:channel_id], params[:user_id])
    end
 
   def attempt_to_find_recipients(client, channel_id, creator_id)
@@ -95,19 +107,54 @@ class SlackQAIndexerJob < ApplicationJob
     recipients
   end
 
-  def find_user_by_slack_id(client, slack_id)
-    creator_slack_info = client.users_info(user: slack_id)
 
-    # TODO maybe try to find by name?
-    unless creator_slack_info.user.profile.email
-      logger.warn("Unable to access the email corresponding to a slack_id #{creator_slack_info}")
+  def convert_question_to_attachment(question)
+    converted_q = {}
+    converted_q[:fallback] = "Similar question on quiki at #{Rails.application.routes.url_helpers.question_url(question, :host => 'www.askquiki.com')}"
+    converted_q[:color] = "#40b9c9"
+    converted_q[:title] = question.body
+    converted_q[:title_link] = Rails.application.routes.url_helpers.question_url(question, :host => 'www.askquiki.com')
+    converted_q[:fields] = []
+
+    if question.comments.last
+      converted_q[:footer] = question.comments.last.user.full_name
+      converted_q[:ts] = question.comments.last.updated_at.to_i
+      question.comments.last(2).each do | comment |
+        field = {}
+        field[:value] = comment.comment
+        field[:short] = false
+        converted_q[:fields].push(field)
+      end
+    else
+      field = {}
+      field[:value] = "No answers for this question yet :("
+      field[:short] = false
+      converted_q[:fields].push(field)
     end
-    user = User.find_by_email(creator_slack_info.user.profile.email)
-    unless user
-      logger.warn("Could not find user object for slack user")
-      logger.warn creator_slack_info
-    end
-    user
+    converted_q
+  end
+
+  def are_these_correct_quest(question)
+    attach = {}
+    attach[:text] = "Did these answer your question?"
+    attach[:fallback] = "You are unable to determine if the previous similar questions answered your question?"
+    attach[:attachment_type] = "default"
+    attach[:callback_id]= "Q#{question.id}"
+    attach[:actions] = [
+        {
+            "name": "question_answered",
+            "text": "Yes",
+            "type": "button",
+            "value": "yes"
+        },
+        {
+            "name": "question_answered",
+            "text": "No, ask my question",
+            "type": "button",
+            "value": "no"
+        }
+    ]
+    attach
   end
 
 end

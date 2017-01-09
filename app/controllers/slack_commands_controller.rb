@@ -4,7 +4,18 @@ class SlackCommandsController < ApplicationController
   def create
     return render json: {}, status: 403 unless valid_slack_token?
     SlackQAIndexerJob.perform_later command_params.to_h
-    render json: { response_type: "in_channel" }, status: :created
+
+    case params[:command]
+      when "/q"
+        render json: {text: "Searching previous questions...", response_type: "ephemeral" }, status: :created
+      when "/a"
+        render json: { response_type: "in_channel" }, status: :created
+      else
+        logger.error("Could not find how to process #{params}")
+        raise "Unexpected command #{params}"
+    end
+
+
   end
 
   private
@@ -15,7 +26,8 @@ class SlackCommandsController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def command_params
-    params.permit(:text, :token, :user_id, :response_url, :command, :channel_id, :team_id, :domain)
+    params.permit(:text, :token, :user_id, :response_url, :command, :channel_id, :team_id, :domain,
+                  :team_domain, :channel_name, :user_name)
   end
 
 
