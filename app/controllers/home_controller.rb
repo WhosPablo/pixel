@@ -5,12 +5,15 @@ class HomeController < ApplicationController
   def index
     #TODO move this out of here
     if params.has_key?(:code)
-      SlackTeamRegister.register_code(params[:code])
+      begin
+        SlackTeamRegister.register_code(params[:code], current_user.company)
+      rescue TeamAlreadyRegistered => e
+        flash[:alert] = e.message
+      end
+      flash[:notice] = "Successfully registered Quiki on Slack. Add @quiki to your preferred channel!"
     end
 
     @new_question = Question.new
-    # @questions = Question.where(companies_id: current_user.company).first(10)
-    #                  .map { | question | QuestionHelper.set_headlessness(question, current_user) }
     @labels = Label
                   .paginate(page: params[:page], per_page: 25)
                   .where(companies_id: current_user.company)

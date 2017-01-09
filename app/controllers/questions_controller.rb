@@ -44,7 +44,7 @@ class QuestionsController < ApplicationController
         format.js
       else
         @messages = @question.errors.full_messages
-        format.html { render :new, notice: @question.errors.message }
+        format.html { render :new, alert: @question.errors.message }
         format.js { render :error, status: :unprocessable_entity }
       end
     end
