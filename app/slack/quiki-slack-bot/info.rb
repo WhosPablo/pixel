@@ -6,13 +6,13 @@ General
 -------
 
 help               - get this helpful message
-whoami             - print your username
 
-Shell
+
+Slash commands
 -----
 
-/q                 - Search quiki for your question and then allow quiki to index the question if it can't find it
-/a                 - Answer the previously asked question
+/q                 - Have Quiki search for your question and ask it if it cannot find it
+/a                 - Answer the last Quiki question asked
 
   EOS
 end
