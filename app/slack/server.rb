@@ -1,5 +1,3 @@
-require_relative 'slack-ruby-bot/client'
-
 module SlackRubyBotServer
   class Server < SlackRubyBot::Server
     attr_accessor :team
@@ -19,6 +17,14 @@ module SlackRubyBotServer
       logger.info "#{team.name}: socket closed, restarting ..."
       SlackRubyBotServer::Service.instance.restart! team, self, wait
       client.owner = team
+    end
+
+    on :channel_joined do |client, data|
+      logger.info "#{client.owner.name}: joined ##{data.channel['name']}."
+      message = <<-EOS.freeze
+Hey! I'm Quiki, here to help save and organize your knowledge. Ask you
+      EOS
+      client.say(channel: data.channel['id'], text: message)
     end
 
   end
