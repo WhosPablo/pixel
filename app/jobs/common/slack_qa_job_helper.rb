@@ -102,8 +102,9 @@ class SlackQaJobHelper
 
   def self.find_question_and_confirm(text, company, new_question)
     possible_qs = Question.find_relevant_question(text, company)
+                      .records
                       .where("comments_count > 0")
-                      .records.to_a[0..@@num_of_qs]
+                      .to_a[0..@@num_of_qs]
 
     message = {}
     if possible_qs.count > 0
@@ -126,8 +127,9 @@ class SlackQaJobHelper
 
   def self.find_question_or_offer_to_ask(text, company, new_question)
     possible_qs = Question.find_relevant_question(text, company)
+                      .records
                       .where("comments_count > 0")
-                      .records.to_a[0..@@num_of_qs]
+                      .to_a[0..@@num_of_qs]
 
     message = {}
     if possible_qs.count > 0
