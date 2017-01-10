@@ -4,7 +4,6 @@ class SlackCommandsController < ApplicationController
   def create
     return render json: {}, status: 403 unless valid_slack_token?
     SlackQAIndexerJob.perform_later command_params.to_h
-
     case params[:command]
       when "/q"
         render json: {text: "Searching previous questions...", response_type: "ephemeral" }, status: :created

@@ -44,14 +44,17 @@ class SlackQAIndexerJob < ApplicationJob
     question.comments.create(comment: params[:text], user: creator)
 
     message = {
-        text: "Thanks, your answer has been posted on Quiki",
+        text: "Thanks, this question and answer has been posted on Quiki",
+        attachments: [],
         response_type: "ephemeral"
     }
 
-    response = HTTParty.post(params[:response_url], { body: message.to_json, headers: {
+    message[:attachments].push(SlackQaJobHelper.convert_question_to_attachment(question))
+
+    logger.info HTTParty.post(params[:response_url], { body: message.to_json, headers: {
         "Content-Type" => "application/json"
     }})
-    logger.info response
+
   end
 
   def search_question_from_slack(creator, params, team, client)
