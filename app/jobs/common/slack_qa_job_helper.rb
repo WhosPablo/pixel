@@ -54,7 +54,7 @@ class SlackQaJobHelper
     converted_q
   end
 
-  def self.are_these_correct_quest(question)
+  def self.are_these_correct_quest(question, no_obj)
     attach = {}
     attach[:text] = "Did these answer your question?"
     attach[:fallback] = "You are unable to determine if the previous similar questions answered your question?"
@@ -69,9 +69,9 @@ class SlackQaJobHelper
         },
         {
             "name": "question_answered",
-            "text": "No, ask my question",
+            "text": no_obj[:text],
             "type": "button",
-            "value": "no"
+            "value": no_obj[:value]
         }
     ]
     attach
@@ -100,6 +100,29 @@ class SlackQaJobHelper
     attach
   end
 
+  def self.find_question_and_confirm(text, company, new_question)
+    possible_qs = Question.find_relevant_question(text, company)
+                      .records.to_a[0..@@num_of_qs]
+
+    message = {}
+    if possible_qs.count > 0
+      message[:text] = "Here are some similar previous questions, do they answer your question?"
+      message[:attachments] = []
+      possible_qs.each do | question |
+        question_attachment = SlackQaJobHelper.convert_question_to_attachment(question)
+        message[:attachments].push(question_attachment)
+      end
+      no_obj = {
+          text: "No",
+          value: "no_public"
+      }
+      message[:attachments].push(SlackQaJobHelper.are_these_correct_quest(new_question, no_obj))
+    else
+      message[:text] = "This question hasn't been asked before. Can someone answer with /a to create a new answer?"
+    end
+    message
+  end
+
   def self.find_question_or_offer_to_ask(text, company, new_question)
     possible_qs = Question.find_relevant_question(text, company)
                       .records.to_a[0..@@num_of_qs]
@@ -112,8 +135,11 @@ class SlackQaJobHelper
         question_attachment = SlackQaJobHelper.convert_question_to_attachment(question)
         message[:attachments].push(question_attachment)
       end
-
-      message[:attachments].push(SlackQaJobHelper.are_these_correct_quest(new_question))
+      no_obj = {
+          text: "No, ask my question",
+          value: "no"
+      }
+      message[:attachments].push(SlackQaJobHelper.are_these_correct_quest(new_question, no_obj))
     else
       message[:text] = "Unable to find any similar questions."
       message[:attachments] = []
@@ -122,5 +148,35 @@ class SlackQaJobHelper
     message
   end
 
+  def self.create_question(user, text)
+    Question.create(user: user, body: text)
+  end
+
+  def self.populate_question(user, team, channel, question, client)
+    # Populate question
+    SlackQuestionIndex.create(team_id: team, channel_id: channel, question: question)
+    question.auto_populate_labels!
+    question.recipients << SlackQaJobHelper.attempt_to_find_recipients(client, channel, user)
+
+  end
+
+  def self.attempt_to_find_recipients(client, channel_id, creator_id)
+    recipients = []
+    channel_slack_info = client.channels_info(channel: channel_id)
+    if channel_slack_info
+      channel_slack_info.channel.members.each do | member |
+        if member != creator_id
+          member_usr = SlackQaJobHelper.find_user_by_slack_id(client, member)
+          if member_usr
+            recipients << member_usr
+          end
+        end
+      end
+    else
+      logger.warn("Unable to get information about the channel, could be a private channel")
+      logger.warn(params)
+    end
+    recipients
+  end
 
 end

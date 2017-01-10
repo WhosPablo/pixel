@@ -13,10 +13,20 @@ class SlackInteractionsController < ApplicationController
       case slack_params[:actions].first[:value]
         when "yes"
           SlackInteractionsJob.perform_later slack_params
-          render json: { text: "Glad I could help!", replace_original: false }, status: 200
+          if slack_params.has_key?(:original_message)
+            modified_original_message = slack_params[:original_message]
+            modified_original_message[:attachments].pop
+            modified_original_message[:attachments].push({ text: "Glad I could help!" })
+            render json: modified_original_message, status: 200
+
+          else
+            render json: { text: "Glad I could help!", replace_original: false }, status: 200
+          end
         when "no"
           SlackInteractionsJob.perform_later slack_params
-          render json: { text: "No worries, asking for you now"}, status: 200
+          render json: { text: "Alright, I'll ask for you now..."}, status: 200
+        when "no_public"
+          render json: { text: "This question hasn't been asked before. Can someone answer with /a to create a new answer?"}, status: 200
         else
           logger.error("Unexpected action value #{slack_params}")
       end

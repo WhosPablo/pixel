@@ -66,29 +66,8 @@ class SlackQAIndexerJob < ApplicationJob
     # Populate question
     SlackQuestionIndex.create(team_id: params[:team_id], channel_id: params[:channel_id], question: new_question)
     new_question.auto_populate_labels!
-    new_question.recipients << attempt_to_find_recipients(client, params[:channel_id], params[:user_id])
+    new_question.recipients << SlackQaJobHelper.attempt_to_find_recipients(client, params[:channel_id], params[:user_id])
    end
-
-  def attempt_to_find_recipients(client, channel_id, creator_id)
-    recipients = []
-    channel_slack_info = client.channels_info(channel: channel_id)
-    if channel_slack_info
-      channel_slack_info.channel.members.each do | member |
-        if member != creator_id
-          member_usr = SlackQaJobHelper.find_user_by_slack_id(client, member)
-          if member_usr
-            recipients << member_usr
-          end
-        end
-      end
-    else
-      logger.warn("Unable to get information about the channel, could be a private channel")
-      logger.warn(params)
-    end
-    recipients
-  end
-
-
 
 
 end
