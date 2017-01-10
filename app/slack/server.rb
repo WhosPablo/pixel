@@ -25,8 +25,8 @@ module SlackRubyBotServer
 
 Hey! I'm Quiki, here to help save and organize your knowledge.
 
-Anytime you want to ask a question type `/q` and I'll
-try to figure out if it has been asked before. If it hasn't been asked before, i'll save it so that it doesn't have to be asked again!
+Anytime you want to ask a question type `/q` and I'll try to figure out if it has been asked before.
+If it hasn't been asked before, i'll save it so that it doesn't have to be asked again!
 
 Type `/a` so that I can add your answer to the question asked through Quiki.
 

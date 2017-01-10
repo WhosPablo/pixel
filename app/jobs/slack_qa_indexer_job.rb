@@ -60,8 +60,8 @@ class SlackQAIndexerJob < ApplicationJob
                       .records
                       .first(@@num_of_qs)
 
+    message = {}
     if possible_qs.count > 0
-      message = {}
       message[:text] = "Here are some similar previous questions, do they answer your question?"
       message[:attachments] = []
 
@@ -72,10 +72,9 @@ class SlackQAIndexerJob < ApplicationJob
 
       message[:attachments].push(are_these_correct_quest(new_question))
     else
-      message = {
-          text: "Please begin your answer with /a or answer at #{Rails.application.routes.url_helpers.question_url(new_question, :host => 'www.askquiki.com')}",
-          response_type: "in_channel"
-      }
+      message[:text] = "Unable to find any similar questions."
+      message[:attachments] = []
+      message[:attachments].push(ask_question_as_quiki(new_question))
     end
 
     logger.info HTTParty.post(params[:response_url], { body: message.to_json, headers: {
@@ -152,6 +151,29 @@ class SlackQAIndexerJob < ApplicationJob
             "text": "No, ask my question",
             "type": "button",
             "value": "no"
+        }
+    ]
+    attach
+  end
+
+  def ask_question_as_quiki(question)
+    attach = {}
+    attach[:text] = "Would you like me to ask your question on the channel?"
+    attach[:fallback] = "You are unable to tell Quiki to ask your question"
+    attach[:attachment_type] = "default"
+    attach[:callback_id]= "Q#{question.id}"
+    attach[:actions] = [
+        {
+            "name": "question_answered",
+            "text": "Yes",
+            "type": "button",
+            "value": "no"
+        },
+        {
+            "name": "question_answered",
+            "text": "No",
+            "type": "button",
+            "value": "yes"
         }
     ]
     attach
