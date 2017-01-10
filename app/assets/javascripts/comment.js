@@ -1,8 +1,10 @@
 $(document).on("turbolinks:load", CommentSetup);
 
 function CommentSetup() {
-    onEnterSubmitComment();
+    //onEnterSubmitComment();
     $('.comment-text').linkify();
+    autosize($('.comment-form-text'));
+
 
 }
 function onEnterSubmitComment(){

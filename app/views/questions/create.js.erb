@@ -1,4 +1,10 @@
 $(".questions-list").prepend('<%=j render(@question) %>');
 $(".question-form")[0].reset();
+
 initializeCommentSlides();
-onEnterSubmitComment();
+CommentSetup();
+
+questionLabels = {
+  'suggested': [],
+  'userCreated': []
+};
