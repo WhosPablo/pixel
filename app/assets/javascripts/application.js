@@ -20,6 +20,7 @@
 //= require linkify
 //= require linkify-jquery
 //= require autosizer
+//= require bootstrap-tour.min
 //= require_tree .
 
 // Initialize material js

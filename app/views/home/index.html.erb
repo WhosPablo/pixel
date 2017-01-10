@@ -1,3 +1,9 @@
+<% unless tour.blank? %>
+  <div class="col-lg-12 text-center tour-button-container">
+    <button id="start-tour" class="btn btn-raised btn-primary" onclick="startTour()">Start Tour</button>
+  </div><br><br>
+<% end %>
+
 
 <%= render 'questions/form', question: @new_question, type: "create" %>
 <div class="questions-list pre-fill"></div>

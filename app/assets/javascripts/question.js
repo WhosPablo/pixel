@@ -28,7 +28,7 @@ function addLabelListeners() {
 function createMentionableRecipients(){
     $('.input-mentionable').ready(function() {
         $('.input-mentionable').atwho({
-            at: '@',
+            at: '',
             data: $('#mentionable-data').data('content'),
             insertTpl: '${username}, ',
             displayTpl: '<li data-id="${id}"><span>${username}</span></li>',

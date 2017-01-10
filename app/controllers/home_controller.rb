@@ -19,6 +19,8 @@ class HomeController < ApplicationController
                   .where(companies_id: current_user.company)
                   .where("questions_count > ?", 0)
                   .order('questions_count DESC, name ASC')
+
+  render 'home/index', :locals => {:tour =>  params.has_key?(:tour)}
   end
 
 

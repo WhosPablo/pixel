@@ -24,7 +24,11 @@ class Users::SessionsController < Devise::SessionsController
   # end
 
   def after_sign_in_path_for(resource)
-    root_path
+    if resource.sign_in_count <= 2
+      authenticated_root_path(:tour => true)
+    else
+      authenticated_root_path
+    end
   end
 
 end
