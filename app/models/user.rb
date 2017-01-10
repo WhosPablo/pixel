@@ -121,12 +121,15 @@ class User < ActiveRecord::Base
   end
 
   def assign_company
-    self.company = Company.find_or_create_by(domain: self.email.split("@").second)
+    if self.company.blank?
+      self.company = Company.find_or_create_by(domain: self.email.split("@").second)
+    end
   end
 
+  #TODO messy, clean this up
   def set_username_on_create
+    company = self.company
     if self.first_name and self.last_name
-      company = Company.find_by_domain(self.email.split("@").second)
       users_with_same_name = User.where(first_name: self.first_name.downcase, last_name: self.last_name.downcase, companies_id:
           company.id)
       last_name_no_spaces = self.last_name.split(' ').join
@@ -136,7 +139,13 @@ class User < ActiveRecord::Base
         self.username = "#{self.first_name.downcase}.#{last_name_no_spaces.downcase}.#{users_with_same_name.count.to_s.rjust(2, '0')}"
       end
     else
-      self.username = self.email.split("@").first.downcase
+      possible_username = self.email.split("@").first.downcase
+      users_with_same_username = User.where(username: possible_username, companies_id: company.id)
+      if users_with_same_username.count == 0 or (users_with_same_username.count == 1 and users_with_same_username.first == self)
+        self.username = "#{self.users_with_same_username}"
+      else
+        self.username = "#{self.users_with_same_username}.#{users_with_same_username.count.to_s.rjust(2, '0')}"
+      end
     end
   end
 
