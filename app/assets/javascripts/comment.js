@@ -2,7 +2,7 @@ $(document).on("turbolinks:load", CommentSetup);
 
 function CommentSetup() {
     //onEnterSubmitComment();
-    $('.comment-text').linkify();
+    $('.comment-text-box').linkify();
     autosize($('.comment-form-text'));
 
 
