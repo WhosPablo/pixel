@@ -7,8 +7,8 @@ require_relative 'quiki-slack-bot/info'
 # require_relative 'quiki-slack-bot/commands/base'
 require_relative 'quiki-slack-bot/commands/help'
 require_relative 'quiki-slack-bot/commands/defaults'
-# require_relative 'quiki-slack-bot/commands/question'
-
+# require_relative 'quiki-slack-bot/commands/question_scraper'
+#
 
 
 require 'server'

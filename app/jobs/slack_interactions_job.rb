@@ -1,3 +1,5 @@
+require 'common/slack_qa_job_helper'
+
 class SlackInteractionsJob < ApplicationJob
   queue_as :default
 
@@ -19,10 +21,10 @@ class SlackInteractionsJob < ApplicationJob
     client = Slack::Web::Client.new
     client.token = team.token
 
-    creator = find_user_by_slack_id(client, params[:user][:id])
+    creator = SlackQaJobHelper.find_user_by_slack_id(client, params[:user][:id])
 
     unless creator
-      report_missing_quiki_profile(params[:response_url])
+      SlackQaJobHelper.report_missing_quiki_profile(params[:response_url])
       raise "Could not find the user object for the creator of an interaction from Slack, User ID: #{params[:user][:id]}"
     end
 
