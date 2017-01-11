@@ -104,7 +104,7 @@ class SlackQaJobHelper
     possible_qs = Question.find_relevant_question(text, company)
                       .records
                       .where("comments_count > 0")
-                      .to_a[0..@@num_of_qs]
+                      .to_a[0]
 
     message = {}
     if possible_qs.count > 0
