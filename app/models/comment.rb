@@ -19,6 +19,11 @@ class Comment < ActiveRecord::Base
   validates_presence_of :user
 
 
+
+  def belongs_to(user_to_check)
+    user_id == user_to_check.id
+  end
+
   private
 
   def create_all_activity

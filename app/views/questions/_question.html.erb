@@ -2,7 +2,7 @@
     <br>
       <div class="initials-container w3-left w3-circle">
         <div class="initials"><%=
-          unless question.headless
+          if QuestionHelper.has_view_permission(question, current_user)
                 question.user.initials
             else
               "Q"
@@ -16,7 +16,7 @@
         </button>
         <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1">
           <li><a href="javaScript:void(0);" onclick="$('#question-<%= question.id %> .comments-section').show()">Answer</a></li>
-          <% if belongs_to_user?(question) %>
+          <% if QuestionHelper.has_edit_permission(question, current_user) %>
               <li><%= link_to "Edit", edit_question_path(question) %></li>
               <li><%= link_to "Delete", question_path(question), method: :delete, class:'danger',
                               remote: true %></li>
@@ -26,7 +26,7 @@
     </span>
     <div class="content question-body">
       <h6 class="owner-name">
-      <% unless question.headless %>
+      <% if QuestionHelper.has_view_permission(question, current_user) %>
           <%= link_to user_path(question.user) do %>
               <%= question.user.full_name.titleize %>
           <% end %>

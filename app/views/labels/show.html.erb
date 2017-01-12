@@ -1,6 +1,6 @@
 <h3><%= @label.name.titlecase %> Label</h3>
 
-<%= render 'questions/question_list', questions: @questions.map { | question | QuestionHelper.set_headlessness(question, current_user) } %>
+<%= render 'questions/question_list', questions: @questions %>
 
 <div id="pagination-controls">
   <%= will_paginate @questions%>

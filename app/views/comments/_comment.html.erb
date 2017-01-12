@@ -4,11 +4,11 @@
   </div>
   <div class="comment-info">
      <span class="w3-opacity">
-          <%= link_to "@#{comment.user.username}", user_path(comment.user)%>
+          <%= link_to comment.user.username, user_path(comment.user)%>
     </span>
       <span class="w3-right w3-opacity">
           <%= time_ago_in_words(comment.created_at) %> ago
-        <% if belongs_to_user?(comment) %>
+        <% if CommentHelper.has_edit_permission(comment, current_user) %>
           <%= link_to comment_path(comment), method: :delete, class: 'btn btn-danger btn-sm', remote: true do %>
               <% fa_icon 'trash' %>
           <% end %>

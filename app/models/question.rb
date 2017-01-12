@@ -45,7 +45,6 @@ class Question < ApplicationRecord
   validates_presence_of :body
 
   # Additional attributes
-  attr_accessor :headless
   attr_accessor :recipients_csv
   attr_accessor :labels_list
 
@@ -59,8 +58,24 @@ class Question < ApplicationRecord
    self.convert_labels
   end
 
+
   def belongs_to(user_to_check)
     user_id == user_to_check.id
+  end
+
+  def convert_labels
+    unless self.labels_list.blank?
+      self.labels.destroy_all
+      self.labels << self.labels_list.map do | label |
+        Label.find_or_create_by(name: label.downcase, company: self.company)
+      end
+    end
+  end
+
+  def convert_recipients
+    unless self.recipients_csv.blank?
+      self.recipients << recipients_csv_to_user_obj(self.recipients_csv, self.user)
+    end
   end
 
   def is_recipient(user_to_check)
@@ -73,15 +88,6 @@ class Question < ApplicationRecord
 
   def labels_csv=(labels_csv)
     self.labels_list = labels_csv.split(',').map(&:strip)
-  end
-
-  def convert_labels
-    unless self.labels_list.blank?
-      self.labels.destroy_all
-      self.labels << self.labels_list.map do | label |
-        Label.find_or_create_by(name: label.downcase, company: self.company)
-      end
-    end
   end
 
   def recipients_are_inside_company
@@ -100,11 +106,7 @@ class Question < ApplicationRecord
     self.recipients_csv = recipient_csv
   end
 
-  def convert_recipients
-    unless self.recipients_csv.blank?
-      self.recipients << recipients_csv_to_user_obj(self.recipients_csv, self.user)
-    end
-  end
+
 
 
   def recipients_csv_to_user_obj(recipients_csv, user)

@@ -23,13 +23,4 @@ class HomeController < ApplicationController
   render 'home/index', :locals => {:tour =>  params.has_key?(:tour)}
   end
 
-
-  private
-
-  def set_headlessness
-    unless self.is_recipient current_user or self.belongs_to current_user
-      @question.headless = true
-      @question.user = nil # To avoid a programming error causing a leak of information
-    end
-  end
 end

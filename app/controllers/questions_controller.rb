@@ -3,7 +3,6 @@ class QuestionsController < ApplicationController
   before_action :set_question, only: [:show, :edit, :update, :destroy]
   before_action :require_ownership, only: [:edit, :update, :destroy]
   before_action :check_permission, only: [:show]
-  before_action :set_headlessness, only: [:show]
   before_action :find_notifications, only: [:show, :edit, :index ]
 
   # GET /questions
@@ -91,13 +90,6 @@ class QuestionsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def question_params
       params.require(:question).permit(:title, :body, :recipients_list_csv, :labels_csv)
-    end
-
-    def set_headlessness
-      unless @question.is_recipient current_user or @question.belongs_to current_user
-        @question.headless = true
-        @question.user = nil # To avoid a programming error causing a leak of information
-      end
     end
 
     def require_ownership
