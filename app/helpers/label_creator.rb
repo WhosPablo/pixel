@@ -16,6 +16,9 @@ class LabelCreator
       # Add spaces to periods in the text
       text = text.gsub(/\.\s/ , ' . ')
 
+      # Replace urls with the domain name
+      text = text.gsub(URI.regexp){ |s| URI.parse(s).host }
+      
       # Get all words from a tagged output
       words = tgr.get_words(text)
 
