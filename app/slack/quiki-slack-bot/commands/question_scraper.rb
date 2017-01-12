@@ -1,5 +1,5 @@
 class Expressions
-  IGNORE = /(meet)|(tomorrow)|(today)|(yesterday)/
+  IGNORE = /(meet)|(tomorrow)|(today)|(yesterday)|(lunch)/
 end
 
 module QuikiBot
@@ -17,7 +17,7 @@ module QuikiBot
 
         words = tgr.get_words(text)
 
-        unless words.keys.count == 0 or data.user.blank? or text =~ Expressions::IGNORE
+        unless words.keys.count == 0 or data.user.blank? or text.downcase =~ Expressions::IGNORE
 
           team = SlackTeam.find_by_team_id(data.team)
 

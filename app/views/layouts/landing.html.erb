@@ -40,7 +40,7 @@
       </h2>
       <div class="ctas">
         <%= form_tag request_demo_path, id: "demo-form", method: :post, class: "ctas", remote: true do %>
-            <%= email_field_tag :email, nil, placeholder: 'Enter a response', class: 'ctas-input' %>
+            <%= email_field_tag :email, nil, placeholder: 'Enter your Email', class: 'ctas-input' %>
             <%= button_tag(type: 'submit', class: "ctas-button") do %>
                 Request Demo
             <% end %>
