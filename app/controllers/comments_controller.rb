@@ -1,5 +1,7 @@
 class CommentsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_comment, only: [:destroy]
+  before_action :require_ownership, only: [:destroy]
   before_action :find_commentable, only: :create
   respond_to :js
 
@@ -21,8 +23,6 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    @comment = current_user.comments.find(params[:id])
-    @comment_id = params[:id]
     @comment.destroy
   end
 
@@ -31,6 +31,16 @@ class CommentsController < ApplicationController
   def find_commentable
     @commentable_type = params[:commentable_type].classify
     @commentable = @commentable_type.constantize.find(params[:commentable_id])
+  end
+
+  def set_comment
+    @comment = Comment.find(params[:id])
+  end
+
+  def require_ownership
+    unless @comment.belongs_to current_user or current_user.is_admin
+      redirect_to root_path, :alert => 'Unauthorized'
+    end
   end
 
 end

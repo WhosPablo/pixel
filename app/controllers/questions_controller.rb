@@ -93,7 +93,7 @@ class QuestionsController < ApplicationController
     end
 
     def require_ownership
-      unless @question.belongs_to current_user
+      unless @question.belongs_to current_user or current_user.is_admin
         redirect_to question_path, :alert => 'Unauthorized'
       end
     end
