@@ -21,7 +21,7 @@ class GhostUserCreator
   def self.process_directory_contacts(access_token, domain, current_user)
     directory_api_call = ADMIN_DIRECTORY_API::DirectoryService.new
     directory_api_call.authorization = AccessToken.new(access_token["credentials"]["token"])
-    response = directory_api_call.list_users(domain: domain, view_type: "domain_public", max_results: 80)
+    response = directory_api_call.list_users(domain: domain, view_type: "domain_public", max_results: 250)
     if response.users
       import_users_from_directory(response.users, current_user)
     end

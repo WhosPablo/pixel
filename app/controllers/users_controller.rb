@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user
   before_action :check_permission
+  before_action :check_admin, only: [:ban]
   before_action :check_ownership, only: [:edit, :notifications, :clear_notifications]
   before_action :find_notifications, only: [:show, :edit, :notifications]
   respond_to :html, :js
@@ -37,6 +38,16 @@ OR (question_recipients.user_id = ? AND questions.user_id = ?)',
     @user.update(last_notification_ack: Time.now)
   end
 
+  def ban
+    @user.banned = true
+    @user.save!
+    respond_to do |format|
+      format.html { redirect_to root_path, notice: 'User was successfully banned.' }
+      format.json { head :no_content }
+      format.js
+    end
+  end
+
   private
 
   def set_user
@@ -52,6 +63,12 @@ OR (question_recipients.user_id = ? AND questions.user_id = ?)',
   def check_permission
     unless current_user.company == @user.company
       redirect_to root_path, :alert => 'Unauthorized'
+    end
+  end
+
+  def check_admin
+    unless current_user.is_admin
+      redirect_to root_path, :alert => 'Unauthorized because you are not an admin'
     end
   end
 

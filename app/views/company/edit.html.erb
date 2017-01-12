@@ -1,0 +1,62 @@
+<h4>Slack Integration</h4>
+<table class="table table-striped table-hover ">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Active</th>
+    <th>Last Updated</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @slack_teams.each do | team | %>
+      <tr id="slack-team-<%=team.id%>">
+        <td><%= team.name %></td>
+        <td><%= team.active.to_s %></td>
+        <td>
+          <%="#{time_ago_in_words(team.updated_at)} ago" %>
+        </td>
+  <% end %>
+
+
+  </table>
+
+
+<h4>User Management</h4>
+<table class="table table-striped table-hover ">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Last Sign In</th>
+    <th>Delete</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @company_users.each do | user | %>
+      <tr id="user-<%=user.id%>">
+        <td><%= user.full_name %></td>
+        <td><%= user.email %></td>
+        <td>
+          <%=
+          unless user.last_sign_in_at.blank?
+            "#{time_ago_in_words(user.last_sign_in_at)} ago"
+          else
+            "Never"
+          end %>
+        </td>
+        <td id="user-<%=user.id%>-ban-button">
+
+          <%=
+            if user.banned?
+              "Banned on #{user.updated_at}"
+            else
+              button_to "Ban", ban_user_path(user),
+                        class: "btn btn-danger", data: { confirm: "Are you sure?" }, remote: true,  method: :put
+            end %>
+      </tr>
+  <% end %>
+
+  </table>
+<div id="pagination-controls">
+  <%= will_paginate @company_users %>
+</div>

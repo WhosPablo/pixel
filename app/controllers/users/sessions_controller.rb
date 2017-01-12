@@ -24,7 +24,11 @@ class Users::SessionsController < Devise::SessionsController
   # end
 
   def after_sign_in_path_for(resource)
-    if resource.sign_in_count <= 2
+    if resource.is_a?(User) && resource.banned?
+      sign_out resource
+      flash[:alert] = "This account has been suspended by an administrator."
+      user_session_path
+    elsif resource.sign_in_count <= 2
       authenticated_root_path(:tour => true)
     else
       authenticated_root_path

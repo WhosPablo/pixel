@@ -2,7 +2,7 @@
     <br>
       <div class="initials-container w3-left w3-circle">
         <div class="initials"><%=
-          if QuestionHelper.has_view_permission(question, current_user)
+          if QuestionHelper.has_view_permission(question, current_user) and question.user
                 question.user.initials
             else
               "Q"
@@ -28,7 +28,7 @@
     </span>
     <div class="content question-body">
       <h6 class="owner-name">
-      <% if QuestionHelper.has_view_permission(question, current_user) %>
+      <% if QuestionHelper.has_view_permission(question, current_user) and question.user %>
           <%= link_to user_path(question.user) do %>
               <%= question.user.full_name.titleize %>
           <% end %>

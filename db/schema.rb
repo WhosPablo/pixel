@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170112054407) do
+ActiveRecord::Schema.define(version: 20170112210536) do
 
   create_table "activities", force: :cascade do |t|
     t.string   "trackable_type"
@@ -150,6 +150,7 @@ ActiveRecord::Schema.define(version: 20170112054407) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.datetime "last_notification_ack"
+    t.boolean  "banned",                 default: false
     t.index ["companies_id"], name: "index_users_on_companies_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true

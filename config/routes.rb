@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
   authenticated :user do
     root :to => 'home#index', as: :authenticated_root
+    resources :company, only: [ :edit ]
     mount ActionCable.server => '/cable'
   end
 
@@ -31,6 +32,7 @@ Rails.application.routes.draw do
     member do
       get :mentionable
       get :notifications
+      put :ban
       put :clear_notifications
     end
   end

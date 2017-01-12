@@ -26,12 +26,16 @@
                 <li id="user-button" class="dropdown">
                   <a id="user-link" href="bootstrap-elements.html" data-target="#" class="dropdown-toggle" data-toggle="dropdown" >
                     <% if current_user.is_admin %>
-                    ADMIN-
+                    [ADMIN]
                     <% end %>
-                  <%= current_user.username %><b class="caret"></b></a>
+                    <%= current_user.username %><b class="caret"></b>
+                  </a>
                   <ul class="dropdown-menu">
                     <li><%= link_to "My questions", questions_path %></li>
                     <li><%= link_to "User Settings", edit_user_registration_path %></li>
+                    <% if current_user.is_admin %>
+                        <li><%= link_to "[ADMIN] Company Settings", edit_company_path(current_user.company) %></li>
+                    <% end %>
                     <li><%= link_to "Log out", users_sign_out_path, :method => :delete %></li>
                   </ul>
                 </li>
@@ -39,7 +43,6 @@
             <% end %>
         <% else %>
             <li><%= link_to 'Log in', user_session_path %></li>
-          <li><%= link_to 'Sign Up', new_user_registration_path %></li>
         <% end %>
       </ul>
     </div>

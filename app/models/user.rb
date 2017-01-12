@@ -147,9 +147,9 @@ class User < ActiveRecord::Base
       possible_username = self.email.split("@").first.downcase
       users_with_same_username = User.where(username: possible_username, companies_id: company.id)
       if users_with_same_username.count == 0 or (users_with_same_username.count == 1 and users_with_same_username.first == self)
-        self.username = "#{self.users_with_same_username}"
+        self.username = "#{possible_username}"
       else
-        self.username = "#{self.users_with_same_username}.#{users_with_same_username.count.to_s.rjust(2, '0')}"
+        self.username = "#{possible_username}.#{users_with_same_username.count.to_s.rjust(2, '0')}"
       end
     end
   end
