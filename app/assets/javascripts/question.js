@@ -11,6 +11,8 @@ function questionSetup() {
     initializeCommentSlides();
     $('.question-body').linkify();
     autosize($('#question_body'));
+    new Clipboard('.copy-link-button');
+
 
 }
 

@@ -1,5 +1,5 @@
 <div class="questions-list">
   <% questions.each do |question| %>
-      <%= render question, remote: false %>
+      <%= render question, remote: false, show_full_question: false %>
   <% end %>
 </div>

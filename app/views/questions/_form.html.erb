@@ -1,6 +1,6 @@
 <div id="mentionable-data" data-content="<%= mentionable_user_path(current_user)%>"></div>
 <div class="w3-container w3-card-2 w3-white w3-round question" id="new-question-form"><br>
-  <h4>Ask a New Question</h4>
+  <h4>Post a New Question</h4>
   <%= simple_form_for question, html: { class: "question-form", autocomplete: "off"}, remote: true do |f| %>
       <%= render 'shared/error_messages', object: f.object %>
       <%= f.input :body, :label => "Question body", as: :text %>
