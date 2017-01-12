@@ -9,7 +9,8 @@ Rails.application.routes.draw do
   resources :comments, only: [:create, :destroy]
 
   unauthenticated :user do
-    root 'home#front_page'
+    root :to => 'landing_page#index'
+    post 'request_demo', to: 'landing_page#request_demo'
   end
 
   authenticated :user do
@@ -40,6 +41,6 @@ Rails.application.routes.draw do
   post 'slack_interactions', to: 'slack_interactions#create'
 
 
-  root :to => 'home#front_page'
+  root :to => 'landing_page#index'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

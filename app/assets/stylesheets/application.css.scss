@@ -11,7 +11,8 @@
  * file per style scope.
  *
  */
-
+@import "landing-main";
+@import "landing-devices";
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import "bootstrap-material-design";
@@ -22,6 +23,7 @@
 @import "w3-theme-blue-grey";
 @import "ripples";
 @import "bootstrap-tour.min";
+
 @import "*";
 
 

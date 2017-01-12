@@ -1,0 +1,154 @@
+<html>
+<head>
+  <title>
+    Quiki
+  </title>
+  <meta charSet="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%= javascript_include_tag 'application' %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<header id="top-header" class="header">
+  <div class="container-lrg">
+    <div class="col-12 spread">
+      <div>
+        <a class="logo">
+          <%= image_tag image_url('white quiki logo.png'), class: "logo" %>
+        </a>
+      </div>
+      <div>
+        <a class="nav-link landing-link" href="https://twitter.com/askquiki">
+          Twitter
+        </a>
+        <a class="nav-link landing-link" href="https://www.facebook.com/askquiki">
+          Facebook
+        </a>
+        <%= link_to 'Log in', user_session_path, {class: "nav-link landing-link"} %>
+      </div>
+    </div>
+  </div>
+  <div class="container-sml">
+    <div class="col-12 text-center">
+      <h1 class="heading">
+        Never answer the same question
+      </h1>
+      <h2 class="paragraph">
+        Quiki automatically organizes Q&amp;A happening on your teams communication platforms so information is shared
+        once and available to the entire organization.
+      </h2>
+      <div class="ctas">
+        <%= form_tag request_demo_path, id: "demo-form", method: :post, class: "ctas", remote: true do %>
+            <%= email_field_tag :email, nil, placeholder: 'Enter a response', class: 'ctas-input' %>
+            <%= button_tag(type: 'submit', class: "ctas-button") do %>
+                Request Demo
+            <% end %>
+        <% end %>
+        <!--<input class="ctas-input" type="text" placeholder="Your Email Address">-->
+        <!--<button class="ctas-button">-->
+        <!--Request Demo-->
+        <!--</button>-->
+      </div>
+    </div>
+  </div>
+  <div class="container-lrg">
+    <div class="centerdevices col-12">
+      <div class="computeriphone">
+        <div class="computer">
+          <div class="mask">
+            <%= image_tag image_url('home app'), class: "mask-img" %>
+          </div>
+        </div>
+        <div class="iphone">
+          <div class="mask">
+            <%= image_tag image_url('phone app'), class: "mask-img" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<div class="feature2">
+  <div class="container-lrg flex">
+    <div class="col-6">
+      <b class="emoji">
+        🎓
+      </b>
+      <h3 class="subheading">
+        Auto-generated Knowledge Base
+      </h3>
+      <p class="paragraph">
+        Quiki constructs an enterprise knowledge base, similar to a Wiki, from your conversations on Slack and other
+        internal communication tools.
+      </p>
+    </div>
+    <div class="col-6">
+      <b class="emoji">
+        🔍
+      </b>
+      <h3 class="subheading">
+        Answers
+      </h3>
+      <p class="paragraph">
+        Quiki automatically answers questions that it recognizes have been asked before directly on your communication
+        platforms.
+      </p>
+    </div>
+  </div>
+  <!--</div>-->
+  <!--<div class="socialproof">-->
+  <!--<div class="container-sml text-center">-->
+  <!--<div class="col-12">-->
+  <!--<h4 class="heading">-->
+  <!--Companies that already love us.-->
+  <!--</h4>-->
+  <!--</div>-->
+  <!--</div>-->
+  <!--<div class="container-lrg">-->
+  <!--<div class="logos flex">-->
+  <!--<img class="col-3" src="img/launchacologo.svg">-->
+  <!--<img class="col-3" src="img/launchacologo.svg">-->
+  <!--<img class="col-3" src="img/launchacologo.svg">-->
+  <!--<img class="col-3" src="img/launchacologo.svg">-->
+  <!--<img class="col-3" src="img/launchacologo.svg">-->
+  <!--<img class="col-3" src="img/launchacologo.svg">-->
+  <!--<img class="col-3" src="img/launchacologo.svg">-->
+  <!--<img class="col-3" src="img/launchacologo.svg">-->
+  <!--</div>-->
+  <!--</div>-->
+  <!--</div>-->
+  <div class="footer">
+    <div class="container-sml text-center">
+      <div class="col-12">
+        <h5 class="heading">
+          Instant answers to your questions
+        </h5>
+        <div class="ctas">
+          <a class="ctas-button" href="#top-header">
+            Sign Up
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="container-lrg footer-nav">
+      <div class="col-12 spread">
+        <div>
+          <a class="nav-link landing-link" href="https://twitter.com/askquiki">
+            Twitter
+          </a>
+          <a class="nav-link landing-link" href="https://www.facebook.com/askquiki">
+            Facebook
+          </a>
+        </div>
+        <div>
+          <a class="nav-link landing-link" href="mailto:founders@askquiki.com?Subject=Hello!">
+            Email Us
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

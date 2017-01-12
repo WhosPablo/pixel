@@ -1,7 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Montserrat);
 
 body {
-  padding-top: 100px;
   background : $bg-color;
   font-family: 'Avenir', sans-serif;
 }
@@ -13,6 +12,11 @@ h4,
 h5,
 h6 {
   font-family: 'Avenir', sans-serif;
+}
+
+.application-body {
+  padding-top: 100px;
+
 }
 
 .navbar-white {
