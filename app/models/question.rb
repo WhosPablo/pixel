@@ -160,21 +160,16 @@ class Question < ApplicationRecord
                     must: {
                         multi_match: {
                             query:  query,
-                            fields: ['body']
-                        }
+                            fields: ['body'],
+                            minimum_should_match: '45%'
+                        },
                     },
                     filter: {
                         term: {
                             companies_id: company.id
                         }
                     }
-                }
-            },
-            highlight: {
-                pre_tags: ['<em>'],
-                post_tags: ['</em>'],
-                fields: {
-                    body: {}
+
                 }
             }
         }
@@ -184,7 +179,9 @@ class Question < ApplicationRecord
   private
 
   def assign_company
-    self.company = self.user.company
+    if self.company.blank?
+      self.company = self.user.company
+    end
   end
 
   def create_all_activity

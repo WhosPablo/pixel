@@ -1,3 +1,7 @@
+class Expressions
+  IGNORE = /(meet)|(tomorrow)|(today)|(yesterday)/
+end
+
 module QuikiBot
   module Commands
     class Question < SlackRubyBot::Commands::Base
@@ -6,14 +10,15 @@ module QuikiBot
       def self.call(client, data, _match)
         logger.info "Question: #{client.owner}, user=#{data.user}, match=#{_match}"
 
+        text = _match.to_s
+
         # Create a parser object
         tgr = EngTagger.new
 
-        words = tgr.get_words(_match.to_s)
+        words = tgr.get_words(text)
 
-        if words.keys.count > 0 and !data.user.blank?
+        unless words.keys.count == 0 or data.user.blank? or text =~ Expressions::IGNORE
 
-          text = _match.to_s
           team = SlackTeam.find_by_team_id(data.team)
 
           full_client =  Slack::Web::Client.new
@@ -21,7 +26,7 @@ module QuikiBot
 
           creator = SlackQaJobHelper.find_user_by_slack_id(full_client, data.user)
 
-          new_question = SlackQaJobHelper.create_question(creator, text)
+          new_question = SlackQaJobHelper.create_question(creator, text, team.company)
 
           message = SlackQaJobHelper.find_question_and_confirm(text, team.company, new_question)
 

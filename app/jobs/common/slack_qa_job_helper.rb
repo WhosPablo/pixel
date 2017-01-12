@@ -101,19 +101,17 @@ class SlackQaJobHelper
   end
 
   def self.find_question_and_confirm(text, company, new_question)
-    possible_qs = [Question.find_relevant_question(text, company)
+    possible_q = Question.find_relevant_question(text, company)
                       .records
                       .where("comments_count > 0")
-                      .to_a[0]]
+                      .to_a[0]
 
     message = {}
-    if possible_qs.count > 0
+    unless possible_q.blank?
       message[:text] = "Here are some similar previous questions, do they answer your question?"
       message[:attachments] = []
-      possible_qs.each do | question |
-        question_attachment = SlackQaJobHelper.convert_question_to_attachment(question)
-        message[:attachments].push(question_attachment)
-      end
+      question_attachment = SlackQaJobHelper.convert_question_to_attachment(possible_q)
+      message[:attachments].push(question_attachment)
       no_obj = {
           text: "No",
           value: "no_public"
@@ -152,8 +150,8 @@ class SlackQaJobHelper
     message
   end
 
-  def self.create_question(user, text)
-    Question.create(user: user, body: text)
+  def self.create_question(user, text, company)
+    Question.create(user: user, body: text, company: company)
   end
 
   def self.populate_question(user, team, channel, question, client)
