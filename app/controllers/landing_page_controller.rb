@@ -21,6 +21,10 @@ class LandingPageController < ApplicationController
     end
   end
 
+  def ssl_test
+    render text: "W9kBtlE5lndyGbETGPJUFYYU6olaYycgJ-LCOWhQIz4.eK6KRF2gjWey4vZl7VMEdMs0sTPVQPqE0FdSvOAq8nI"
+  end
+
   private
 
   def demo_requests_params
