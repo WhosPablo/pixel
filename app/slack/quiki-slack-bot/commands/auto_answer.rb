@@ -1,7 +1,7 @@
 module QuikiBot
   module Commands
     class AutoAnswer < SlackRubyBot::Commands::Base
-      command "auto answer on", "auto answer off", "auto answers on", "auto answers off"
+      command "answer on", "answer off", "answers on", "answers off"
 
       def self.call(client, data, match)
         logger.info "Command: #{match}, user=#{data.user}, channel=#{data.channel}"

@@ -64,7 +64,10 @@ class SlackInteractionsJob < ApplicationJob
     question = Question.find(question_id)
 
     message = {
-        text: "Question from <@#{params[:user][:id]}>: #{question.body} \n Please begin your answer with /a or answer at #{Rails.application.routes.url_helpers.question_url(question, :host => 'www.askquiki.com')}",
+        text: "Question from <@#{params[:user][:id]}>. Please begin your answer with /a ",
+        attachments: [ {
+                           text: question.body
+                       } ],
         response_type: "in_channel",
         replace_original: false
     }

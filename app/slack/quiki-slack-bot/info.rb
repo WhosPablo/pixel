@@ -4,8 +4,8 @@ I am your friendly Quiki Bot, here to help.
 
 General
 -------
-auto answer on     - Automatically determine which questions to answer
-auto answer off    - Turn of automatic discovery of questions
+answer on          - Automatically determine which questions to answer
+answer off         - Turn of automatic discovery of questions
 help               - get this helpful message
 
 

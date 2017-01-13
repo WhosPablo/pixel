@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170112223903) do
+ActiveRecord::Schema.define(version: 20170113181928) do
 
   create_table "activities", force: :cascade do |t|
     t.string   "trackable_type"
@@ -123,7 +123,10 @@ ActiveRecord::Schema.define(version: 20170112223903) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.integer  "question_id"
+    t.text     "body"
+    t.integer  "users_id"
     t.index ["question_id"], name: "index_slack_question_indices_on_question_id"
+    t.index ["users_id"], name: "index_slack_question_indices_on_users_id"
   end
 
   create_table "slack_teams", force: :cascade do |t|
