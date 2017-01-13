@@ -9,6 +9,7 @@ class Unknown < SlackRubyBot::Commands::Base
       return
     end
 
+    
     question_index = SlackQuestionIndex.where(team_id: data.team, channel_id: data.channel).last
 
     unless question_index.body.blank?
