@@ -1,4 +1,4 @@
-$(".questions-list").prepend('<%=j render(@question) %>');
+$(".questions-list").prepend('<%=j render(@question, show_full_question: false) %>');
 $(".question-form")[0].reset();
 
 initializeCommentSlides();
