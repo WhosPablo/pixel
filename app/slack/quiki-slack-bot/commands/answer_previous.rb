@@ -8,8 +8,6 @@ class Unknown < SlackRubyBot::Commands::Base
       QuikiBot::Commands::AutoAnswer.call(client, data, _match)
       return
     end
-
-    
     question_index = SlackQuestionIndex.where(team_id: data.team, channel_id: data.channel).last
 
     unless question_index.body.blank?
