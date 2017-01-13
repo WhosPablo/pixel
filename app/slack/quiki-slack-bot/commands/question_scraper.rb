@@ -8,7 +8,15 @@ module QuikiBot
       match(/[\s\S]*[\?]/)
 
       def self.call(client, data, _match)
-        logger.info "Question: #{client.owner}, user=#{data.user}, match=#{_match}"
+
+        logger.info "Question: #{client.owner}, team=#{data.team}, channel=#{data.channel} ,user=#{data.user}, match=#{_match}"
+
+        channel = SlackChannel.find_or_create_by(channel_id: data.channel, team_id: data.team)
+
+        # Do not auto answer for channels that have requested it be turned off
+        unless channel.auto_answer
+          return
+        end
 
         text = _match.to_s
 
@@ -33,7 +41,6 @@ module QuikiBot
           full_client.chat_postMessage(channel: data.channel, text: message[:text], attachments: message[:attachments])
 
           SlackQaJobHelper.populate_question(data.user, data.team, data.channel, new_question, full_client)
-
         end
       end
     end

@@ -7,8 +7,10 @@ require_relative 'quiki-slack-bot/info'
 
 # require_relative 'quiki-slack-bot/commands/base'
 require_relative '../../app/jobs/common/slack_qa_job_helper'
+require_relative 'quiki-slack-bot/commands/auto_answer'
 require_relative 'quiki-slack-bot/commands/help'
 require_relative 'quiki-slack-bot/commands/defaults'
+require_relative 'quiki-slack-bot/commands/answer_previous'
 require_relative 'quiki-slack-bot/commands/question_scraper'
 #
 

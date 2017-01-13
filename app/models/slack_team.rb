@@ -1,4 +1,5 @@
 class SlackTeam < ApplicationRecord
+  has_many :slack_teams
 
 
   SORT_ORDERS = ['created_at', '-created_at', 'updated_at', '-updated_at'].freeze

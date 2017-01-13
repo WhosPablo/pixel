@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170112210536) do
+ActiveRecord::Schema.define(version: 20170112223903) do
 
   create_table "activities", force: :cascade do |t|
     t.string   "trackable_type"
@@ -103,6 +103,18 @@ ActiveRecord::Schema.define(version: 20170112210536) do
     t.integer  "comments_count", default: 0
     t.index ["companies_id"], name: "index_questions_on_companies_id"
     t.index ["user_id"], name: "index_questions_on_user_id"
+  end
+
+  create_table "slack_channels", force: :cascade do |t|
+    t.string   "team_id"
+    t.string   "channel_id"
+    t.boolean  "auto_answer",    default: true
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.integer  "companies_id"
+    t.integer  "slack_teams_id"
+    t.index ["companies_id"], name: "index_slack_channels_on_companies_id"
+    t.index ["slack_teams_id"], name: "index_slack_channels_on_slack_teams_id"
   end
 
   create_table "slack_question_indices", force: :cascade do |t|
