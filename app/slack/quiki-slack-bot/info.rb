@@ -4,9 +4,10 @@ I am your friendly Quiki Bot, here to help.
 
 General
 -------
+
 answer on          - Automatically determine which questions to answer
 answer off         - Turn of automatic discovery of questions
-help               - get this helpful message
+help               - Get this helpful message
 
 
 Slash commands

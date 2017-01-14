@@ -4,7 +4,7 @@ module QuikiBot
       command "answer on", "answer off", "answers on", "answers off"
 
       def self.call(client, data, match)
-        logger.info "Command: #{match}, user=#{data.user}, channel=#{data.channel}"
+        logger.info "Command in auto answer: #{match}, user=#{data.user}, channel=#{data.channel}, team=#{data.team}"
         channel = SlackChannel.find_or_create_by(channel_id: data.channel, team_id: data.team)
         if match.to_s.include? "off"
           channel.auto_answer = false

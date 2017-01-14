@@ -9,7 +9,7 @@ module QuikiBot
 
       def self.call(client, data, _match)
 
-        logger.info "Question: #{client.owner}, team=#{data.team}, channel=#{data.channel} ,user=#{data.user}, match=#{_match}"
+        logger.info "Question scrapped: #{client.owner}, team=#{data.team}, channel=#{data.channel} ,user=#{data.user}, match=#{_match}"
 
         channel = SlackChannel.find_or_create_by(channel_id: data.channel, team_id: data.team)
 

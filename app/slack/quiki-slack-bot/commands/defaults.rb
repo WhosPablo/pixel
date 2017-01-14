@@ -1,8 +1,15 @@
 module QuikiBot
   module Commands
 
+    class Default < SlackRubyBot::Commands::Base
+      match(/^(?<bot>\w*)$/)
+
+      def self.call(client, data, _match)
+        QuikiBot::Commands::AnswerPrevious.call(client, data, _match)
+      end
+    end
+
     class About < SlackRubyBot::Commands::Base
-      match(/^(?<bot>[[:alnum:][:punct:]@<>]*)$/u)
 
       command 'about', 'hi' do |client, data, match|
         logger.info "Command: #{match}, user=#{data.user}"
