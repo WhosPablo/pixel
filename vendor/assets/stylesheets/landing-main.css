@@ -177,6 +177,7 @@ p.paragraph {
 	padding: 0 15px;
 	width: 260px;
 	display: inline-block;
+	color: black;
 }
 .ctas-button {
 	display: inline-block;
