@@ -1,5 +1,9 @@
 <div class="questions-list">
-  <% questions.each do |question| %>
-      <%= render question, remote: false, show_full_question: false %>
+  <% unless questions.blank? %>
+    <% questions.each do |question| %>
+        <%= render question, remote: false, show_full_question: false %>
+      <% end %>
+  <% else %>
+    <h4> No questions</h4>
   <% end %>
 </div>

@@ -15,7 +15,11 @@ Rails.application.routes.draw do
 
   authenticated :user do
     root :to => 'home#index', as: :authenticated_root
-    resources :company, only: [ :edit ]
+    resources :company, only: [ :edit ]  do
+      member do
+        get :unanswered_questions
+      end
+    end
     mount ActionCable.server => '/cable'
   end
 
@@ -32,16 +36,17 @@ Rails.application.routes.draw do
     member do
       get :mentionable
       get :notifications
+      get :questions_answered
+      get :questions_asked
       put :ban
       put :clear_notifications
     end
   end
 
   get 'search', to: 'search#search'
-  get '.well-known/acme-challenge/bBBKYIm6OdgVb2aEqrRIdsLorRFs-I5KGc2iWZAaggc', to: 'landing_page#ssl_test'
+
   post 'commands', to: 'slack_commands#create'
   post 'slack_interactions', to: 'slack_interactions#create'
-
 
   root :to => 'landing_page#index'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

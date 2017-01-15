@@ -1,0 +1,7 @@
+<h3>Questioned asked by <%= @user.full_name.titleize %></h3>
+
+<%= render 'questions/question_list', questions: @questions %>
+
+<div id="pagination-controls">
+  <%= will_paginate @questions%>
+</div>

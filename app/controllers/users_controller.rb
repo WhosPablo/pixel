@@ -3,8 +3,8 @@ class UsersController < ApplicationController
   before_action :set_user
   before_action :check_permission
   before_action :check_admin, only: [:ban]
-  before_action :check_ownership, only: [:edit, :notifications, :clear_notifications]
-  before_action :find_notifications, only: [:show, :edit, :notifications]
+  before_action :check_ownership, only: [:edit, :notifications, :clear_notifications, :questions_answered, :questions_asked]
+  before_action :find_notifications, only: [:show, :edit, :notifications,:questions_answered, :questions_asked]
   respond_to :html, :js
 
   def show
@@ -22,6 +22,20 @@ OR (question_recipients.user_id = ? AND questions.user_id = ?)',
   end
 
   def edit
+  end
+
+  def questions_answered
+    @question_ids = Comment
+                       .paginate(page: params[:page], per_page: 15)
+                       .where('commentable_type = ? AND user_id = ?',
+                            "Question", @user.id)
+    @questions = Question.find(@question_ids.pluck(:commentable_id))
+  end
+
+  def questions_asked
+    @questions = Question
+                     .paginate(page: params[:page], per_page: 15)
+                     .where(user: @user)
   end
 
 
@@ -55,20 +69,20 @@ OR (question_recipients.user_id = ? AND questions.user_id = ?)',
   end
 
   def check_ownership
-    unless current_user == @user
+    unless current_user == @user or current_user.is_admin
       redirect_to root_path, :alert => 'Unauthorized'
     end
   end
 
   def check_permission
-    unless current_user.company == @user.company
+    unless current_user.company == @user.company or current_user.is_admin
       redirect_to root_path, :alert => 'Unauthorized'
     end
   end
 
   def check_admin
     unless current_user.is_admin
-      redirect_to root_path, :alert => 'Unauthorized because you are not an admin'
+      redirect_to root_path, :alert => 'Unauthorized because you are not an administrator'
     end
   end
 

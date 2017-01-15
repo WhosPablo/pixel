@@ -8,9 +8,19 @@ class CompanyController < ApplicationController
 
 
   def edit
+    @questions_count = Question.paginate(page: params[:page], per_page: 25)
+                     .where(company: @company)
+                     .where(comments_count: 0).count()
     @company_users = User.paginate(page: params[:page], per_page: 25)
                          .where(company: @company)
     @slack_teams = SlackTeam.where(company: @company)
+  end
+
+  def unanswered_questions
+    @questions = Question.paginate(page: params[:page], per_page: 25)
+                     .where(company: @company)
+                     .where(comments_count: 0)
+
   end
 
   private
