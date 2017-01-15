@@ -65,8 +65,10 @@ class Question < ApplicationRecord
 
   def convert_labels
     self.labels.destroy_all
-    self.labels << self.labels_list.map do | label |
-      Label.find_or_create_by(name: label.downcase, company: self.company)
+    unless self.labels_list.blank?
+      self.labels << self.labels_list.map do | label |
+        Label.find_or_create_by(name: label.downcase, company: self.company)
+      end
     end
   end
 
@@ -107,18 +109,22 @@ class Question < ApplicationRecord
 
 
   def recipients_csv_to_user_obj(recipients_csv, user)
-    recipients = recipients_csv.split(',').map(&:strip)
-    recipients.map do | recipient_username_or_email |
-      unless recipient_username_or_email.blank?
-        recipient = find_recipient_by_username_or_email(recipient_username_or_email.downcase, user.companies_id)
-        #TODO fix race condition here between checking if user exists and creating one
-        if recipient.blank?
-          create_ghost_user_from_recipient(recipient_username_or_email, user)
-        else
-          recipient
+    unless recipients_csv.blank?
+      recipients = recipients_csv.split(',').map(&:strip)
+      recipients.map do | recipient_username_or_email |
+        unless recipient_username_or_email.blank?
+          recipient = find_recipient_by_username_or_email(recipient_username_or_email.downcase, user.companies_id)
+          #TODO fix race condition here between checking if user exists and creating one
+          if recipient.blank?
+            create_ghost_user_from_recipient(recipient_username_or_email, user)
+          else
+            recipient
+          end
         end
-      end
-    end .compact
+      end .compact
+    else
+      []
+    end
   end
 
   def self.search(query, viewer)
