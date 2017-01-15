@@ -123,7 +123,7 @@ class SlackQaJobHelper
       }
       message[:attachments].push(SlackQaJobHelper.are_these_correct_quest(new_question, no_obj))
     else
-      message[:text] = "This question hasn't been asked before. Can someone answer with /a to create a new answer?"
+      message[:text] = "This question hasn't been asked before. Can someone answer with /a to save this question?"
     end
     message
   end

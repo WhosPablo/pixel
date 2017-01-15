@@ -26,7 +26,7 @@ class SlackInteractionsController < ApplicationController
           SlackInteractionsJob.perform_later slack_params
           render json: { text: "Alright, I'll ask for you now..."}, status: 200
         when "no_public"
-          render json: { text: "New question. Can someone answer with /a to create a new answer?"}, status: 200
+          render json: { text: "New question. Can someone answer with /a to save this question?"}, status: 200
         else
           logger.error("Unexpected action value #{slack_params}")
       end

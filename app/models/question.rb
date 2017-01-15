@@ -135,6 +135,7 @@ class Question < ApplicationRecord
                     must: {
                       multi_match: {
                         query:  query,
+                        fuzziness: "AUTO",
                         fields: ['body']
                       }
                     },
@@ -166,6 +167,7 @@ class Question < ApplicationRecord
                         multi_match: {
                             query:  query,
                             cutoff_frequency: 0.001,
+                            fuzziness: "AUTO",
                             fields: ['body']
                         }
 
