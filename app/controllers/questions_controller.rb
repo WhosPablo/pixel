@@ -3,7 +3,7 @@ class QuestionsController < ApplicationController
   before_action :set_question, only: [:show, :edit, :update, :destroy]
   before_action :require_ownership, only: [:edit, :update, :destroy]
   before_action :check_permission, only: [:show]
-  before_action :find_notifications, only: [:show, :edit, :index]
+  before_action :find_notifications, only: [:show, :update, :edit, :index]
 
   # GET /questions
   # GET /questions.json
@@ -58,8 +58,9 @@ class QuestionsController < ApplicationController
         format.html { redirect_to @question, notice: 'Question was successfully updated.' }
         format.json { render :show, status: :ok, location: @question }
       else
-        format.html { render :edit }
-        format.json { render json: @question.errors, status: :unprocessable_entity }
+        @messages = @question.errors.full_messages
+        format.html { render :edit, alert: @question.errors.message }
+        format.js { render :error, status: :unprocessable_entity }
       end
     end
   end
