@@ -157,7 +157,7 @@ class Question < ApplicationRecord
   def self.find_relevant_question(query, company)
     __elasticsearch__.search(
         {
-            # min_score: 0.5,
+
             query: {
                 bool: {
                     must: {
@@ -173,8 +173,8 @@ class Question < ApplicationRecord
                     }
 
                 }
-            },
-            cutoff_frequency: 0.12
+            }
+
         }
     )
   end
