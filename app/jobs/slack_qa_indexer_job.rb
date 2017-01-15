@@ -20,7 +20,7 @@ class SlackQAIndexerJob < ApplicationJob
     client = Slack::Web::Client.new
     client.token = team.token
 
-    creator = SlackQaJobHelper.find_user_by_slack_id(client, params[:user_id])
+    creator = SlackQaJobHelper.find_user_by_slack_id(client, params[:user_id], team.company)
     unless creator
       SlackQaJobHelper.report_missing_quiki_profile(params[:response_url])
       raise "Could not find the user object for the creator of a question/answer from Slack, User ID: #{params[:user_id]}"
@@ -39,7 +39,10 @@ class SlackQAIndexerJob < ApplicationJob
   def create_answer_from_slack(creator, params)
 
     # Attempt to find  the relevant question
-    question = SlackQuestionIndex.where(team_id: params[:team_id], channel_id: params[:channel_id]).last.question
+    question = SlackQuestionIndex.where(team_id: params[:team_id], channel_id: params[:channel_id])
+                   .where("question_id IS NOT NULL")
+                   .last.question
+
 
     question.comments.create(comment: params[:text], user: creator)
 
@@ -69,7 +72,7 @@ class SlackQAIndexerJob < ApplicationJob
     # Populate question
     SlackQuestionIndex.create(team_id: params[:team_id], channel_id: params[:channel_id], question: new_question)
     new_question.auto_populate_labels!
-    new_question.recipients << SlackQaJobHelper.attempt_to_find_recipients(client, params[:channel_id], params[:user_id])
+    new_question.recipients << SlackQaJobHelper.attempt_to_find_recipients(client, params[:channel_id], params[:user_id], team.company)
    end
 
 

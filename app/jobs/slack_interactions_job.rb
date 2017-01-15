@@ -21,7 +21,7 @@ class SlackInteractionsJob < ApplicationJob
     client = Slack::Web::Client.new
     client.token = team.token
 
-    creator = SlackQaJobHelper.find_user_by_slack_id(client, params[:user][:id])
+    creator = SlackQaJobHelper.find_user_by_slack_id(client, params[:user][:id], team.company)
 
     unless creator
       SlackQaJobHelper.report_missing_quiki_profile(params[:response_url])

@@ -13,17 +13,20 @@ class SlackQaJobHelper
     Rails.logger.info response
   end
 
-  def self.find_user_by_slack_id(client, slack_id)
+  def self.find_user_by_slack_id(client, slack_id, company)
     creator_slack_info = client.users_info(user: slack_id)
 
     # TODO maybe try to find by name?
     unless creator_slack_info.user.profile.email
       Rails.logger.warn("Unable to access the email corresponding to a slack_id #{creator_slack_info}")
+      return
     end
     user = User.find_by_email(creator_slack_info.user.profile.email)
     unless user
       Rails.logger.warn("Could not find user object for slack user")
       Rails.logger.warn creator_slack_info
+      user = User.create_ghost_user_from_email(email: creator_slack_info.user.profile.email)
+      user.company = company
     end
     user
   end
@@ -158,17 +161,17 @@ class SlackQaJobHelper
     # Populate question
     SlackQuestionIndex.create(team_id: team, channel_id: channel, question: question)
     question.auto_populate_labels!
-    question.recipients << SlackQaJobHelper.attempt_to_find_recipients(client, channel, user)
+    question.recipients << SlackQaJobHelper.attempt_to_find_recipients(client, channel, user, team.company)
 
   end
 
-  def self.attempt_to_find_recipients(client, channel_id, creator_id)
+  def self.attempt_to_find_recipients(client, channel_id, creator_id, company)
     recipients = []
     channel_slack_info = client.channels_info(channel: channel_id)
     if channel_slack_info
       channel_slack_info.channel.members.each do | member |
         if member != creator_id
-          member_usr = SlackQaJobHelper.find_user_by_slack_id(client, member)
+          member_usr = SlackQaJobHelper.find_user_by_slack_id(client, member, company)
           if member_usr
             recipients << member_usr
           end

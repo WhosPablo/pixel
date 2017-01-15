@@ -20,7 +20,7 @@ module QuikiBot
             full_client =  Slack::Web::Client.new
             full_client.token = team.token
 
-            creator = SlackQaJobHelper.find_user_by_slack_id(full_client, data.user)
+            creator = SlackQaJobHelper.find_user_by_slack_id(full_client, data.user, team.company)
 
             SlackQuestionIndex.create(team_id: data.team, channel_id: data.channel, body: _match, user: creator)
           end
@@ -41,7 +41,7 @@ module QuikiBot
           full_client =  Slack::Web::Client.new
           full_client.token = team.token
 
-          creator = SlackQaJobHelper.find_user_by_slack_id(full_client, data.user)
+          creator = SlackQaJobHelper.find_user_by_slack_id(full_client, data.user, team.company)
 
           new_question = SlackQaJobHelper.create_question(creator, text, team.company)
 
