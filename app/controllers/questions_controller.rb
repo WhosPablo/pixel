@@ -3,7 +3,7 @@ class QuestionsController < ApplicationController
   before_action :set_question, only: [:show, :edit, :update, :destroy]
   before_action :require_ownership, only: [:edit, :update, :destroy]
   before_action :check_permission, only: [:show]
-  before_action :find_notifications, only: [:show, :edit, :index ]
+  before_action :find_notifications, only: [:show, :edit, :index]
 
   # GET /questions
   # GET /questions.json
