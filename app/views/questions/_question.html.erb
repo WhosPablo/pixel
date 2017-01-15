@@ -34,8 +34,6 @@
           <% end %>
       <% end %>
       <span class="w3-opacity time-ago"> <%= time_ago_in_words(question.updated_at) %></span></h6>
-      <h8><%= raw question.recipients.map{ |u| link_to("@#{h(u.username)}", user_path(u)) }.to_sentence%></h8>
-      <br>
       <p class="text"><%= simple_format(question.body) %></p>
     </div>
     <div class="row">
