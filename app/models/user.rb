@@ -68,7 +68,7 @@ class User < ActiveRecord::Base
   end
 
   def is_admin
-    ["lucianoarango@gmail.com", "luciano@askquiki.com", "nabeysen@gmail.com", "natalie@askquiki.com"]
+    ["quiki@getrileynow.com", "lucianoarango@gmail.com", "luciano@askquiki.com", "nabeysen@gmail.com", "natalie@askquiki.com"]
         .include?(self.email)
   end
 
