@@ -157,13 +157,13 @@ class Question < ApplicationRecord
   def self.find_relevant_question(query, company)
     __elasticsearch__.search(
         {
+            # min_score: 0.5,
             query: {
                 bool: {
                     must: {
                         multi_match: {
                             query:  query,
-                            fields: ['body'],
-                            minimum_should_match: '45%'
+                            fields: ['body']
                         },
                     },
                     filter: {
@@ -173,7 +173,8 @@ class Question < ApplicationRecord
                     }
 
                 }
-            }
+            },
+            cutoff_frequency: 0.12
         }
     )
   end
