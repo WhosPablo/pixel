@@ -61,7 +61,7 @@ class SlackQAIndexerJob < ApplicationJob
   end
 
   def search_question_from_slack(creator, params, team, client)
-    new_question = Question.create(user: creator, body: params[:text])
+    new_question = Question.create(user: creator, body: params[:text], company: team.company)
 
     message = SlackQaJobHelper.find_question_or_offer_to_ask(params[:text], team.company, new_question)
 

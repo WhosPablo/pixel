@@ -157,11 +157,11 @@ class SlackQaJobHelper
     Question.create(user: user, body: text, company: company)
   end
 
-  def self.populate_question(user, team, channel, question, client)
+  def self.populate_question(user, team, channel, question, client, company)
     # Populate question
     SlackQuestionIndex.create(team_id: team, channel_id: channel, question: question)
     question.auto_populate_labels!
-    question.recipients << SlackQaJobHelper.attempt_to_find_recipients(client, channel, user, team.company)
+    question.recipients << SlackQaJobHelper.attempt_to_find_recipients(client, channel, user, company)
 
   end
 

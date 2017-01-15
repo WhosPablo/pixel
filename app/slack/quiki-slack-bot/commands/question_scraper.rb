@@ -49,7 +49,7 @@ module QuikiBot
 
           full_client.chat_postMessage(channel: data.channel, text: message[:text], attachments: message[:attachments])
 
-          SlackQaJobHelper.populate_question(data.user, data.team, data.channel, new_question, full_client)
+          SlackQaJobHelper.populate_question(data.user, data.team, data.channel, new_question, full_client, team.company)
         end
       end
     end

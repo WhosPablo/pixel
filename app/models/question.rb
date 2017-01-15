@@ -64,6 +64,7 @@ class Question < ApplicationRecord
   end
 
   def convert_labels
+    # TODO Cant remove all labels at once
     unless self.labels_list.blank?
       self.labels.destroy_all
       self.labels << self.labels_list.map do | label |
@@ -157,14 +158,15 @@ class Question < ApplicationRecord
   def self.find_relevant_question(query, company)
     __elasticsearch__.search(
         {
-
             query: {
                 bool: {
                     must: {
                         multi_match: {
                             query:  query,
+                            cutoff_frequency: 0.001,
                             fields: ['body']
-                        },
+                        }
+
                     },
                     filter: {
                         term: {
