@@ -22,7 +22,7 @@ class LandingPageController < ApplicationController
   end
 
   def ssl_test
-    render text: "W9kBtlE5lndyGbETGPJUFYYU6olaYycgJ-LCOWhQIz4.eK6KRF2gjWey4vZl7VMEdMs0sTPVQPqE0FdSvOAq8nI"
+    render text: "bBBKYIm6OdgVb2aEqrRIdsLorRFs-I5KGc2iWZAaggc.eK6KRF2gjWey4vZl7VMEdMs0sTPVQPqE0FdSvOAq8nI"
   end
 
   private

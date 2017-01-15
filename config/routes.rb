@@ -38,7 +38,7 @@ Rails.application.routes.draw do
   end
 
   get 'search', to: 'search#search'
-  get '.well-known/acme-challenge/W9kBtlE5lndyGbETGPJUFYYU6olaYycgJ-LCOWhQIz4', to: 'landing_page#ssl_test'
+  get '.well-known/acme-challenge/bBBKYIm6OdgVb2aEqrRIdsLorRFs-I5KGc2iWZAaggc', to: 'landing_page#ssl_test'
   post 'commands', to: 'slack_commands#create'
   post 'slack_interactions', to: 'slack_interactions#create'
 
