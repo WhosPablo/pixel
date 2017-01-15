@@ -59,7 +59,7 @@ class SlackQaJobHelper
 
   def self.are_these_correct_quest(question, no_obj)
     attach = {}
-    attach[:text] = "Did these answer your question?"
+    attach[:text] = "Did this answer your question?"
     attach[:fallback] = "You are unable to determine if the previous similar questions answered your question?"
     attach[:attachment_type] = "default"
     attach[:callback_id]= "Q#{question.id}"
@@ -104,17 +104,19 @@ class SlackQaJobHelper
   end
 
   def self.find_question_and_confirm(text, company, new_question)
-    possible_q = Question.find_relevant_question(text, company)
+    possible_qs = Question.find_relevant_question(text, company)
                       .records
                       .where("comments_count > 0")
-                      .to_a[0]
+                      .to_a[0..1]
 
     message = {}
-    unless possible_q.blank?
-      message[:text] = "Here are some similar previous questions, do they answer your question?"
+    if possible_qs.count > 0
+      # message[:text] = "Here are some similar previous questions, do they answer your question?"
       message[:attachments] = []
-      question_attachment = SlackQaJobHelper.convert_question_to_attachment(possible_q)
-      message[:attachments].push(question_attachment)
+      possible_qs.each do | question |
+        question_attachment = SlackQaJobHelper.convert_question_to_attachment(question)
+        message[:attachments].push(question_attachment)
+      end
       no_obj = {
           text: "No",
           value: "no_public"
@@ -134,7 +136,7 @@ class SlackQaJobHelper
 
     message = {}
     if possible_qs.count > 0
-      message[:text] = "Here are some similar previous questions, do they answer your question?"
+      # message[:text] = "Here are some similar previous questions, do they answer your question?"
       message[:attachments] = []
       possible_qs.each do | question |
         question_attachment = SlackQaJobHelper.convert_question_to_attachment(question)
