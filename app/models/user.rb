@@ -92,10 +92,11 @@ class User < ActiveRecord::Base
   end
 
   def must_have_corp_email
-    domain = self.email.split("@").second
-    #TODO checks for more personal accounts
-    errors.add(:base, 'Email must have a corporate domain') unless domain != "gmail.com" and domain != "hotmail.com" and
-        domain != "outlook.com"
+    true
+    # domain = self.email.split("@").second
+    # #TODO checks for more personal accounts
+    # errors.add(:base, 'Email must have a corporate domain') unless domain != "gmail.com" and domain != "hotmail.com" and
+    #     domain != "outlook.com"
   end
 
   def turn_ghost_user_to_real_user(params)
