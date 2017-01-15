@@ -54,6 +54,7 @@ module QuikiBot
             SlackQaJobHelper.populate_question(data.user, data.team, data.channel, new_question, full_client, team.company)
           end
         end
+        log.info "question rejected because nouns:#{words.keys.count}, or text has a stop word"
       end
     end
   end
