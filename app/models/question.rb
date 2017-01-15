@@ -64,19 +64,15 @@ class Question < ApplicationRecord
   end
 
   def convert_labels
-    # TODO Cant remove all labels at once
-    unless self.labels_list.blank?
-      self.labels.destroy_all
-      self.labels << self.labels_list.map do | label |
-        Label.find_or_create_by(name: label.downcase, company: self.company)
-      end
+    self.labels.destroy_all
+    self.labels << self.labels_list.map do | label |
+      Label.find_or_create_by(name: label.downcase, company: self.company)
     end
   end
 
   def convert_recipients
-    unless self.recipients_csv.blank?
-      self.recipients << recipients_csv_to_user_obj(self.recipients_csv, self.user)
-    end
+    self.recipients.destroy_all
+    self.recipients << recipients_csv_to_user_obj(self.recipients_csv, self.user)
   end
 
   def is_recipient(user_to_check)
@@ -84,7 +80,7 @@ class Question < ApplicationRecord
   end
 
   def labels_csv
-    self.labels.map { |t| t.name }.join(",")
+    self.labels.map { |t| t.name }.join(' ,')
   end
 
   def labels_csv=(labels_csv)
@@ -100,7 +96,7 @@ class Question < ApplicationRecord
   end
 
   def recipients_list_csv
-    self.recipients.map { |t| t.username }.to_sentence
+    self.recipients.map { |t| t.username }.join(' ,')
   end
 
   def recipients_list_csv=(recipient_csv)
@@ -111,16 +107,16 @@ class Question < ApplicationRecord
 
 
   def recipients_csv_to_user_obj(recipients_csv, user)
-    recipients = recipients_csv.split(/,\s+/)
-
+    recipients = recipients_csv.split(',').map(&:strip)
     recipients.map do | recipient_username_or_email |
-
-      recipient = find_recipient_by_username_or_email(recipient_username_or_email.downcase, user.companies_id)
-      #TODO fix race condition here between checking if user exists and creating one
-      if recipient.blank?
-        create_ghost_user_from_recipient(recipient_username_or_email, user)
-      else
-        recipient
+      unless recipient_username_or_email.blank?
+        recipient = find_recipient_by_username_or_email(recipient_username_or_email.downcase, user.companies_id)
+        #TODO fix race condition here between checking if user exists and creating one
+        if recipient.blank?
+          create_ghost_user_from_recipient(recipient_username_or_email, user)
+        else
+          recipient
+        end
       end
     end .compact
   end

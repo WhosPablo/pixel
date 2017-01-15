@@ -4,7 +4,7 @@
   <%= simple_form_for question, html: { class: "question-form", autocomplete: "off"}, remote: true do |f| %>
       <%= render 'shared/error_messages', object: f.object %>
       <%= f.input :body, :label => "Question body", as: :text %>
-      <%= f.input :recipients_list_csv, :label => "Recipients:", placeholder: 'luciano.arango, jordan.smith, help@askquiki.com', input_html: {class: 'input-mentionable', value: nil }%>
+      <%= f.input :recipients_list_csv, :label => "Recipients:", placeholder: 'luciano.arango, jordan.smith, help@askquiki.com', input_html: {class: 'input-mentionable' }%>
       <%= f.input :labels_csv, :label => "Labels:", placeholder: 'Marketing, Engineering, Travel, Reimbursement ' %>
 
       <%= f.button :button, class: "btn btn-primary pull-right w3-margin-bottom", data: {disable_with: "Creating..."} do %>
