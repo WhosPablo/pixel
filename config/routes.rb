@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-  resources :labels
 
   resources :questions
   get 'q/:id' => 'questions#show'
@@ -20,6 +19,7 @@ Rails.application.routes.draw do
         get :unanswered_questions
       end
     end
+    resources :labels, only: [:index, :show, :destroy]
     mount ActionCable.server => '/cable'
   end
 

@@ -1,5 +1,5 @@
 <%= link_to label_path(label) do %>
-  <div class="col-md-2 well well-lg label-box">
+  <div id="label-<%= label.id%>" class="col-md-2 well well-lg label-box">
     <span class="label-name">
       <%= label.name.titlecase %>
     </span>
@@ -7,5 +7,12 @@
     <div class=" label-counts">
       <%= pluralize(label.questions_count, 'Question')%>
     </div>
+    <% if current_user.is_admin %>
+      <%= link_to label_path(label), data: { confirm: "Are you sure you want to delete the #{label.name.titlecase} label?" },
+                    class: "btn btn-danger delete-button", method: :delete, remote: true do %>
+          <% fa_icon 'trash' %>
+      <% end %>
+    <% end %>
+
   </div>
 <% end %>

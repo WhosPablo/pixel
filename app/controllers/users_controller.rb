@@ -80,10 +80,4 @@ OR (question_recipients.user_id = ? AND questions.user_id = ?)',
     end
   end
 
-  def check_admin
-    unless current_user.is_admin
-      redirect_to root_path, :alert => 'Unauthorized because you are not an administrator'
-    end
-  end
-
 end
