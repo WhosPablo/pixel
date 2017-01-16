@@ -166,7 +166,7 @@ class Question < ApplicationRecord
                     must: {
                         multi_match: {
                             query:  query,
-                            cutoff_frequency: 0.001,
+                            cutoff_frequency: 0.008,
                             # fuzziness: "AUTO",
                             fields: ['body']
                         }
