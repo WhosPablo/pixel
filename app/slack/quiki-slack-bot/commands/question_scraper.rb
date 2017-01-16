@@ -1,6 +1,6 @@
 class Expressions
   HAS = /(who)|(what)|(when)|(where)|(why)|(how)|(should)|(can)|(do)|(question)/
-  IGNORE = /(meet)|(tomorrow)|(today)|(yesterday)|(lunch)|(\")/
+  IGNORE = /(meet)|(tomorrow)|(today)|(yesterday)|(lunch)|(\")|(uploaded a file)/
 end
 
 module QuikiBot
@@ -29,7 +29,6 @@ module QuikiBot
         end
 
         text = _match.to_s
-
         # Create a parser object
         tgr = EngTagger.new
 
@@ -53,8 +52,9 @@ module QuikiBot
 
             SlackQaJobHelper.populate_question(data.user, data.team, data.channel, new_question, full_client, team.company)
           end
+        else
+          logger.info "question rejected because nouns:#{words.keys.count}, or text words"
         end
-        logger.info "question rejected because nouns:#{words.keys.count}, or text has a stop word"
       end
     end
   end
